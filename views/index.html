@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      figure {
+        display: inline-block;
+        margin: 0;
+        max-width: 100%;
+      }
+      img {
+        max-width: 100%;
+        border: 4px inset black;
+      }
+    </style>
+    <meta property="og:image" content="http://${host}/image.png" />
+    <meta property="fc:frame" content="vNext" />
+    <meta property="fc:frame:image" content="http://${host}/image.png" />
+    <meta property="fc:frame:button:1" content="Frame me!" />
+    <title>Simplest Frame</title>
+  </head>
+  <body>
+    <h1>The Simplest Frame</h1>
+    <figure>
+      <img width="600" src="/image.png" />
+    </figure>
+    <!-- Form for POST request -->
+    <form action="/" method="post">
+      <input type="submit" value="Frame me!" />
+    </form>
+  </body>
+</html>
