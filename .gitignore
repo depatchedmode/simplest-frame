@@ -1,0 +1,3 @@
+*.nix
+node_modules/
+.replitnode_modules/
