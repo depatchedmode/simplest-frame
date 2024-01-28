@@ -51,10 +51,11 @@ const handleIndexResponse = async (req, res) => {
       // Process POST request data from req.body
       console.log('POST data:', req.body);
       frameCount++;
+      console.log('framed:',frameCount);
     }
     const host = req.get('host');
     const indexHtml = await fs.readFile(join(__dirname, 'views', 'index.html'), 'utf8');
-    res.status(200).send(indexHtml.replace(/\${host}/g, host));
+    res.status(200).send(indexHtml.replace(/\${host}/g, host).replace(/\${count}/g, frameCount));
   } catch (error) {
       console.error('Error:', error);
       res.status(500).send('An error occurred');
@@ -63,6 +64,7 @@ const handleIndexResponse = async (req, res) => {
 
 app.get('/', handleIndexResponse);
 app.post('/', handleIndexResponse);
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
