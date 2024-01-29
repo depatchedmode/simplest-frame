@@ -31,7 +31,8 @@ export default async (req, context) => {
                 background: black;
                 align-items: center;
                 justify-content: center;
-                font-size: 10vh;
+                font-size: 5em;
+                line-height: 1;
             }
         </style>
         </head>
