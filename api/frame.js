@@ -1,6 +1,6 @@
 export default async (req, context) => {
     const url = new URL(req.url);
-    const count = url.searchParams.get('count') || 0;
+    const params = url.searchParams;
 
     const font = {
         file: 'Redaction-Regular.woff2',
@@ -24,20 +24,22 @@ export default async (req, context) => {
             fc-frame {
                 font-family: "${font.name}";
                 display: flex;
+                flex-direction: column;
                 width: 100vw;
                 height: 100vh;
                 color: white;
                 background: black;
                 align-items: center;
                 justify-content: center;
-                font-size: 5em;
                 line-height: 1;
+                border: 2em solid #232323;
             }
         </style>
         </head>
         <body>
         <fc-frame>
-            i've been framed ${count} times
+            <div style="font-size: 5em;">i've been framed ${params.get('count') || 0} times</div>
+            <div style="font-size: 2em; margin-top: 1em">last framed by fid ${params.get('fid') || ''}</div>
         </fc-frame>
         </body>
     </html>

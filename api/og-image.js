@@ -3,11 +3,11 @@ import sharp from "sharp";
 import { html } from "satori-html";
 
 export default async (req, context) => {
-    const url = new URL(req.url);
-    const count = url.searchParams.get('count') || 0;
-
+    const inboundUrl = new URL(req.url);
     const host = process.env.URL;
-    const htmlResponse = await fetch(`${host}/frame?count=${count}`);
+    const frameUrl = `${host}/frame?${inboundUrl.searchParams}`;
+
+    const htmlResponse = await fetch(frameUrl);
     const markup = await htmlResponse.text();
 
     const font = {
@@ -21,7 +21,7 @@ export default async (req, context) => {
     html(markup), 
     {
         width: 1200,
-        height: 800,
+        height: 630,
         fonts: [
             {
                 name: font.cssName,
