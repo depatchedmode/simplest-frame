@@ -1,18 +1,11 @@
 import { getStore } from "@netlify/blobs";
 import { URLSearchParams } from 'url';
 
-
 export default async (req, context) => {
     const store = getStore('frameState');
     let rawCount = await store.get('count');
     let count = parseInt(rawCount);
-
     if (Number.isNaN(count)) count = 0;
-
-    console.debug('rawCount',rawCount);
-    console.debug('parsedCount',count);
-    
-    const host = process.env.URL;
 
     if (req.method === 'POST') {
         let data;
@@ -23,13 +16,12 @@ export default async (req, context) => {
             // Parse URL-encoded body
             data = Object.fromEntries(new URLSearchParams(req.body));
         }
-        const newCount = count+1
-        console.debug('newCount',newCount);
+        console.debug(data);
+        const newCount = count+1;
         await store.set('count', newCount);
-        rawCount = await store.get('count');
-        console.debug('rawCount:updated',rawCount);
     }
 
+    const host = process.env.URL;
     const imagePath = `${host}/og-image?count=${count}`;
 
     const html = `
@@ -56,7 +48,7 @@ export default async (req, context) => {
         <body>
             <h1>The Simplest Frame</h1>
             <figure>
-            <img width="600" src="${imagePath}" />
+                <img width="600" src="${imagePath}" />
             </figure>
             <!-- Form for POST request -->
             <form action="/" method="post">

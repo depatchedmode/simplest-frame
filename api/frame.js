@@ -14,7 +14,7 @@ export default async (req, context) => {
             @font-face {
                 font-family: "${font.name}";
                 src:
-                    local("Trickster"),
+                    local("${font.name}"),
                     url("/fonts/${font.file}") format("woff2");
                 }
             body {
