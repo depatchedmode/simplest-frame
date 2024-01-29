@@ -1,20 +1,14 @@
 {
   "name": "simplest-frame",
+  "private": true,
   "type": "module",
   "version": "0.0.0",
-  "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "dependencies": {
+    "@netlify/blobs": "^6.4.2",
     "express": "^4.18.2",
     "node-fetch": "^3.3.0",
     "satori": "^0.10.11",
     "satori-html": "^0.3.2",
     "sharp": "^0.33.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.3"
   }
 }
