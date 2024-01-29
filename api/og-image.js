@@ -5,7 +5,6 @@ import { html } from "satori-html";
 export default async (req, context) => {
     const url = new URL(req.url);
     const count = url.searchParams.get('count') || 0;
-    console.log(url);
 
     const host = process.env.URL;
     const htmlResponse = await fetch(`${host}/frame?count=${count}`);

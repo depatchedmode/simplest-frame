@@ -4,9 +4,13 @@ import { URLSearchParams } from 'url';
 
 export default async (req, context) => {
     const store = getStore('frameState');
-    let count = await store.get('count');
-    count = parseInt(count);
-    if (!count) count = 0;
+    let rawCount = await store.get('count');
+    let count = parseInt(rawCount);
+
+    if (Number.isNaN(count)) count = 0;
+
+    console.debug('rawCount',rawCount);
+    console.debug('parsedCount',count);
     
     const host = process.env.URL;
 
@@ -19,7 +23,11 @@ export default async (req, context) => {
             // Parse URL-encoded body
             data = Object.fromEntries(new URLSearchParams(req.body));
         }
-        await store.set('count', (count+1).toString());
+        const newCount = count+1
+        console.debug('newCount',newCount);
+        await store.set('count', newCount);
+        rawCount = await store.get('count');
+        console.debug('rawCount:updated',rawCount);
     }
 
     const imagePath = `${host}/og-image?count=${count}`;
