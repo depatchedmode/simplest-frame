@@ -6,7 +6,7 @@
 2. **Zero Cost:** Frames are for experiments! Experimenting is more fruitful when it's free.
 3. **Stable:** The domain and its attached state should be reasonably stable over the horizon of an experiment. Replit can only give you this at cost (see above)
 4. **Dynamic Generation:** You can get all the above pretty easy with static files, but let's be real: we want dynamism!
-5. **Cool Tech 😎:** We want to be at the 🤬 here, people!
+5. **Cool Tech 😎:** We want to be at the 🤬 edge here, people!
 
 ### Getting started
 
