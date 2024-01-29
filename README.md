@@ -16,7 +16,19 @@
 3. `npm install`
 4. `netlify dev`
 
-... and deploying should just be as simple as [watching a git repo for commits](https://docs.netlify.com/site-deploys/create-deploys/).
+... and deploying 
+
+### Testing
+
+1. Run `netlify dev --live` will give [proxy your local machine](https://docs.netlify.com/cli/local-development/#share-a-live-development-server) to the *world* *wide* *web*.
+2. Test that link in the Warpcast Embed UI: https://warpcast.com/~/developers/embeds
+
+### Deploying
+
+This should be as simple as [watching a git repo for commits](https://docs.netlify.com/site-deploys/create-deploys/).
+
+You may encounter a 502 gateway error after deployment on the `/og-image` endpoint. This is a known issue with the `sharp` module this repo relies upon. We'll hopefully have this fixed by default, but for now there are workarounds. Follow this thread for fixes:
+https://github.com/depatchedmode/simplest-frame/issues/3
 
 ### Caveats
 I am a designer larping as a dev. I invite your collaboration and feedback. Please be kind.
