@@ -5,6 +5,8 @@ import { URLSearchParams } from 'url';
 export default async (req, context) => {
     const store = getStore('frameState');
     let count = await store.get('count');
+    count = parseInt(count);
+    if (!count) count = 0;
     
     const host = process.env.URL;
 
@@ -17,8 +19,7 @@ export default async (req, context) => {
             // Parse URL-encoded body
             data = Object.fromEntries(new URLSearchParams(req.body));
         }
-        await store.set('count', (parseInt(count)+1).toString());
-
+        await store.set('count', (count+1).toString());
     }
 
     const imagePath = `${host}/og-image?count=${count}`;

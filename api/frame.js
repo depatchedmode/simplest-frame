@@ -1,7 +1,6 @@
 export default async (req, context) => {
     const url = new URL(req.url);
     const count = url.searchParams.get('count') || 0;
-    const host = process.env.URL;
 
     const font = {
         file: 'Redaction-Regular.woff2',
