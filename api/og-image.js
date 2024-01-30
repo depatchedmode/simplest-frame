@@ -1,3 +1,5 @@
+import { join } from 'path';
+import { promises as fs } from 'fs';
 import satori from "satori";
 import sharp from "sharp";
 import { html } from "satori-html";
@@ -11,11 +13,14 @@ export default async (req, context) => {
     const markup = await htmlResponse.text();
 
     const font = {
-        fileName: 'Redaction-Regular.otf',
+        path: '/public/fonts/Redaction-Regular.otf',
         cssName: 'Redaction'
     };
-    const fontResponse = await fetch(`${host}/fonts/${font.fileName}`);
-    const fontData = await fontResponse.arrayBuffer();
+    // Determine the path to the font file relative to the current file
+    const fontPath = join(process.cwd(), '', font.path);
+    
+    // Read the font file from disk
+    const fontData = await fs.readFile(fontPath);
 
     const svg = await satori(
     html(markup), 
