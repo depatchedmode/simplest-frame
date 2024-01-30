@@ -7,7 +7,8 @@ export default async (req, context) => {
         name: 'Redaction'
     };
 
-    const html = `
+    const html = String.raw;
+    const markup = html`
         <html>
         <head>
         <style>
@@ -16,7 +17,7 @@ export default async (req, context) => {
                 src:
                     local("${font.name}"),
                     url("/fonts/${font.file}") format("woff2");
-                }
+            }
             body {
                 margin: 0;
                 padding: 0;
@@ -45,7 +46,7 @@ export default async (req, context) => {
     </html>
     `
 
-    return new Response(html, 
+    return new Response(markup, 
         {
             status: 200,
             headers: { 'Content-Type': 'text/html' },

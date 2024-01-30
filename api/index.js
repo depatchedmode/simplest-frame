@@ -52,7 +52,8 @@ export default async (req, context) => {
 
     const host = process.env.URL;
     const imagePath = `${host}/og-image?count=${count}&fid=${lastFramerFID}`;
-    const html = `
+    const html = String.raw;
+    const markup = html`
         <!doctype html>
         <html>
         <head>
@@ -86,7 +87,7 @@ export default async (req, context) => {
         </html>
     `
     
-    return new Response(html, 
+    return new Response(markup, 
         {
             status: 200,
             headers: { 'Content-Type': 'text/html' },
