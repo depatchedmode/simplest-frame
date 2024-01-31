@@ -13,18 +13,17 @@
 
 1. Clone the repo
 2. Install the [Netlify CLI](https://docs.netlify.com/cli/get-started/)
-3. `npm install`
-4. `netlify dev`
-
-... and deploying 
+3. Copy `sample.env` to `.env` and add:
+   + your Netlify Key, for deploys: `NETLIFY_AUTH_TOKEN`
+   + a [Wield Key](https://docs.wield.co/farcaster/api() for reading Farcaster state: `WIELD_API_KEY`
+4. `npm install`
+5. `netlify dev`
 
 ### Testing
-
 1. Run `netlify dev --live` will give [proxy your local machine](https://docs.netlify.com/cli/local-development/#share-a-live-development-server) to the *world* *wide* *web*.
 2. Test that link in the Warpcast Embed UI: https://warpcast.com/~/developers/embeds
 
 ### Deploying
-
 This should be as simple as [watching a git repo for commits](https://docs.netlify.com/site-deploys/create-deploys/).
 
 You may encounter a 502 gateway error after deployment on the `/og-image` endpoint. This is a known issue with the `sharp` module this repo relies upon. We'll hopefully have this fixed by default, but for now there are workarounds. Follow this thread for fixes:

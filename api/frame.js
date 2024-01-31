@@ -40,7 +40,7 @@ export default async (req, context) => {
         <body>
         <fc-frame>
             <div style="font-size: 5em;">i've been framed ${params.get('count') || 0} times</div>
-            <div style="font-size: 2em; margin-top: 1em">last framed by fid ${params.get('fid') || ''}</div>
+            <div style="font-size: 2em; margin-top: 1em">last framed by @${params.get('username') || ''}</div>
         </fc-frame>
         </body>
     </html>

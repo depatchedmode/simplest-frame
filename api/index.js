@@ -29,8 +29,16 @@ const getCount = async() => {
 
 const getFramer = async() => {
     const store = getStore('frameState');
-    const framer = await store.get('framer');
-    return framer;
+    const framerId = await store.get('framer');
+    const request = await fetch(`https://protocol.wield.co/farcaster/v2/user?fid=${framerId}`, {
+        method: "GET",
+        headers: { "API-KEY": process.env.WIELD_API_KEY }
+      });
+    const body = await streamToString(request.body);
+    const data = JSON.parse(body);
+    console.debug(data);
+    const username = data.result.user.username;
+    return username;
 }
 
 const incrementCount = async(currentCount, fid) => {
@@ -43,15 +51,15 @@ const incrementCount = async(currentCount, fid) => {
 export default async (req, context) => {
     
     const count = await getCount();
-    const lastFramerFID = await getFramer() || '';
+    const lastFramerUsername = await getFramer() || '';
     const data = await parseRequest(req);
-
+    console.debug(lastFramerUsername);
     if (data) {
         incrementCount(count, data.untrustedData.fid);
     }
 
     const host = process.env.URL;
-    const imagePath = `${host}/og-image?count=${count}&fid=${lastFramerFID}`;
+    const imagePath = `${host}/og-image?count=${count}&username=${lastFramerUsername}`;
     const html = String.raw;
     const markup = html`
         <!doctype html>
@@ -79,10 +87,6 @@ export default async (req, context) => {
             <figure>
                 <img width="600" src="${imagePath}" />
             </figure>
-            <!-- Form for POST request -->
-            <form action="/" method="post">
-                <input type="submit" value="Frame me!" /> ${count}
-            </form>
         </body>
         </html>
     `
