@@ -1,4 +1,5 @@
-![image](https://github.com/depatchedmode/simplest-frame/assets/84613835/3737bb31-1c06-4d8d-abd0-1fdf3e94fc40)
+![image](https://github.com/depatchedmode/simplest-frame/assets/84613835/6a7b3817-4936-4499-b79b-ccc7fcf3950f)
+
 ## A zero-cost, zero-framework, dynamic Farcaster Frame template
 
 ### My needs for starting this were:
