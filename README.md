@@ -23,6 +23,12 @@
 1. Run `netlify dev --live` will give [proxy your local machine](https://docs.netlify.com/cli/local-development/#share-a-live-development-server) to the *world* *wide* *web*.
 2. Test that link in the Warpcast Embed UI: https://warpcast.com/~/developers/embeds
 
+### Defining your Frame
+
+We'll update with a proper docs soon, but you'll find everything you need in the `public` and `src` directories.
+
+To add a new frame, create a `{frameName}.js` file in `/src/frames` and add it as an import to `/src/frames/index.js`. You'll find examples of dynamic (eg. rendered HTML) and static (eg. served from the public folder) frames in that directory.
+
 ### Deploying
 This should be as simple as [watching a git repo for commits](https://docs.netlify.com/site-deploys/create-deploys/).
 
