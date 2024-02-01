@@ -1,6 +1,11 @@
-import { decideNextFrame } from './frames';
+import { frames, decideNextFrame } from './frames';
 import fonts from './fonts';
 import { objectToURLSearchParams } from './modules/utils';
+
+const html = String.raw;
+const defaultButtons = html`
+    <meta property="fc:frame:button:1" content="Begin" />
+`
 
 export default async (frameData) => {
     const { request } = frameData;
@@ -12,16 +17,18 @@ export default async (frameData) => {
 
     if (debug) console.debug(frameData);
 
+    let buttons = defaultButtons;
+
     if (request) {
         frameData.targetFrame = decideNextFrame(frameData);
+        buttons = frames[frameData.targetFrame].buttons;
         const searchParams = objectToURLSearchParams(frameData);
-        frameImage = `${host}/og-image?${searchParams}`
-    } 
+        frameImage = `${host}/og-image?${searchParams}`;
+    }
 
     const fontFile = fonts[0].file; // TODO: we'll have more than 1 font at some point
     const fontName = fonts[0].name;
 
-    const html = String.raw;
     const markup = html`
         <!doctype html>
         <html>
@@ -73,10 +80,12 @@ export default async (frameData) => {
                     display: block;
                 }
             </style>
+            
             <meta property="og:image" content="${posterImage}" />
             <meta property="fc:frame" content="vNext" />
             <meta property="fc:frame:image" content="${frameImage}" />
-            <meta property="fc:frame:button:1" content="Begin" />
+            ${buttons}
+
             <title>🔳 The Simplest Frame</title>
         </head>
         <body>
