@@ -1,4 +1,5 @@
-![image](https://github.com/depatchedmode/simplest-frame/assets/84613835/3737bb31-1c06-4d8d-abd0-1fdf3e94fc40)
+![image](https://github.com/depatchedmode/simplest-frame/assets/84613835/6a7b3817-4936-4499-b79b-ccc7fcf3950f)
+
 ## A zero-cost, zero-framework, dynamic Farcaster Frame template
 
 ### My needs for starting this were:
@@ -13,18 +14,23 @@
 
 1. Clone the repo
 2. Install the [Netlify CLI](https://docs.netlify.com/cli/get-started/)
-3. `npm install`
-4. `netlify dev`
-
-... and deploying 
+3. Copy `sample.env` to `.env` and add:
+   + your Netlify Key, for deploys: `NETLIFY_AUTH_TOKEN`
+   + a [Wield Key](https://docs.wield.co/farcaster/api() for reading Farcaster state: `WIELD_API_KEY`
+4. `npm install`
+5. `netlify dev`
 
 ### Testing
-
 1. Run `netlify dev --live` will give [proxy your local machine](https://docs.netlify.com/cli/local-development/#share-a-live-development-server) to the *world* *wide* *web*.
 2. Test that link in the Warpcast Embed UI: https://warpcast.com/~/developers/embeds
 
-### Deploying
+### Defining your Frame
 
+We'll update with a proper docs soon, but you'll find everything you need in the `public` and `src` directories.
+
+To add a new frame, create a `{frameName}.js` file in `/src/frames` and add it as an import to `/src/frames/index.js`. You'll find examples of dynamic (eg. rendered HTML) and static (eg. served from the public folder) frames in that directory.
+
+### Deploying
 This should be as simple as [watching a git repo for commits](https://docs.netlify.com/site-deploys/create-deploys/).
 
 You may encounter a 502 gateway error after deployment on the `/og-image` endpoint. This is a known issue with the `sharp` module this repo relies upon. We'll hopefully have this fixed by default, but for now there are workarounds. Follow this thread for fixes:

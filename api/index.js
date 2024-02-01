@@ -1,95 +1,53 @@
-import { getStore } from "@netlify/blobs";
-
-async function streamToString(stream) {
-    const chunks = [];
-    for await (const chunk of stream) {
-        chunks.push(chunk instanceof Buffer ? chunk : Buffer.from(chunk));
-    }
-    return Buffer.concat(chunks).toString('utf8');
-}
-
-const parseRequest = async(req) => {
-    const contentType = req.headers.get('content-type');
-    const method = req.method;
-    let data;
-    if (method === 'POST' && contentType === 'application/json') {
-        const body = await streamToString(req.body);
-        data = JSON.parse(body);
-    }
-    return data
-}
-
-const getCount = async() => {
-    const store = getStore('frameState');
-    let rawCount = await store.get('count');
-    let count = parseInt(rawCount);
-    if (Number.isNaN(count)) count = 0;
-    return count;
-}
-
-const getFramer = async() => {
-    const store = getStore('frameState');
-    const framer = await store.get('framer');
-    return framer;
-}
-
-const incrementCount = async(currentCount, fid) => {
-    const store = getStore('frameState');
-    const newCount = currentCount+1;
-    await store.set('count', newCount);
-    await store.set('framer', fid);
-}
+import landingPage from '../src/landing-page';
+import frames from '../src/frames';
+import { parseRequest, objectToURLSearchParams } from '../modules/utils';
+import buildButtons from '../modules/buildButtons';
+import getTargetFrame from '../modules/getTargetFrame';
 
 export default async (req, context) => {
-    
-    const count = await getCount();
-    const lastFramerFID = await getFramer() || '';
-    const data = await parseRequest(req);
+    const debug = process.env.DEBUG_MODE;
+    const host = process.env.URL;
+    const payload = await parseRequest(req);
+    let from = 'poster';
+    let buttonId = null;
 
-    if (data) {
-        incrementCount(count, data.untrustedData.fid);
+    if (payload) {
+        const requestURL = new URL(req.url);
+        from = requestURL.searchParams.get('frame');
+        buttonId = payload.untrustedData?.buttonIndex;
+    } 
+
+    const { frameSrc, frameName } = getTargetFrame(from,buttonId,frames);
+    const frameContent = {
+        image: ``,
+        buttons: buildButtons(frameSrc.buttons),
+        postURL: `${host}?frame=${frameName}`
     }
 
-    const host = process.env.URL;
-    const imagePath = `${host}/og-image?count=${count}&fid=${lastFramerFID}`;
-    const html = `
-        <!doctype html>
-        <html>
-        <head>
-            <style>
-                figure {
-                    display: inline-block;
-                    margin: 0;
-                    max-width: 100%;
-                }
-                img {
-                    max-width: 100%;
-                    border: 4px inset black;
-                }
-            </style>
-            <meta property="og:image" content="${imagePath}" />
-            <meta property="fc:frame" content="vNext" />
-            <meta property="fc:frame:image" content="${imagePath}" />
-            <meta property="fc:frame:button:1" content="Frame me!" />
-            <title>Simplest Frame</title>
-        </head>
-        <body>
-            <h1>The Simplest Frame</h1>
-            <figure>
-                <img width="600" src="${imagePath}" />
-            </figure>
-            <!-- Form for POST request -->
-            <form action="/" method="post">
-                <input type="submit" value="Frame me!" /> ${count}
-            </form>
-        </body>
-        </html>
-    `
+    const frameData = {
+        name: frameName,
+        server: {
+            host,
+            debug
+        },
+        payload,
+    }
+
+    if (frameSrc.image) {
+        frameContent.image = `${host}${frameSrc.image}`;
+    } else if (frameSrc.build) {
+        const searchParams = objectToURLSearchParams(frameData);
+        frameContent.image = `${host}/og-image?${searchParams}`;
+    } else {
+        console.error(`Each frame requires an image path or a build function`)
+    }
     
-    return new Response(html, 
+    return new Response(await landingPage(frameContent), 
         {
             status: 200,
-            headers: { 'Content-Type': 'text/html' },
+            headers: { 
+                'Content-Type': 'text/html; charset=utf-8' 
+            },
         }
     );
 }
