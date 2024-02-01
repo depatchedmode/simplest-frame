@@ -15,7 +15,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # sharp issue: https://sharp.pixelplumbing.com/install#cross-platform
-# package-lock.json 
+package-lock.json 
 
 node_modules
 dist
