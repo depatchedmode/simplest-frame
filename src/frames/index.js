@@ -1,26 +1,19 @@
+import poster from "./poster-frame";
 import start from "./start-frame";
+import checkFrame from "../modules/checkFrame";
 
 const frames = {
     start,
-}
-
-const checkFrame = (name) => {
-    if (frames[name]) {
-        return name;
-    } else {
-        console.error(`No frame found called ${name}`);
-        return '';
-    }
+    poster,
 }
 
 const decideNextFrame = (frameData) => {
     const { request } = frameData;
-    const { trustedData, untrustedData } = request;
     
-    if (untrustedData.buttonIndex == 1) {
-        return checkFrame('start');
+    if (request?.untrustedData.buttonIndex == 1) {
+        return checkFrame('start', frames);
     } else {
-        return null;
+        return checkFrame('poster', frames);
     }
 }
 
