@@ -1,5 +1,5 @@
-import { frames } from "../src/frames";
-import { URLSearchParamsToObject } from '../src/modules/utils';
+import frames from "../src/frames";
+import { URLSearchParamsToObject } from '../modules/utils';
 
 export default async (req, context) => {
     const url = new URL(req.url);
@@ -7,7 +7,7 @@ export default async (req, context) => {
     const frameSrc = frames[frameData.name];
 
     if (frameSrc.image) {
-        const image = `${process.env.URL}/${frameSrc.image}`
+        const image = `${process.env.URL}${frameSrc.image}`
         return new Response(image,
             {
                 status: 200,

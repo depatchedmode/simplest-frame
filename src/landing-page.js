@@ -60,6 +60,7 @@ export default async (frameContent) => {
             
             <meta property="og:image" content="${frameContent.image}" />
             <meta property="fc:frame" content="vNext" />
+            <meta property="fc:frame:post_url" content="${frameContent.postURL}" />
             <meta property="fc:frame:image" content="${frameContent.image}" />
             ${frameContent.buttons}
 

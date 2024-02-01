@@ -1,4 +1,4 @@
-import { loadFont } from '../modules/utils';
+import { loadFont } from '../../modules/utils';
 
 export default [
     {

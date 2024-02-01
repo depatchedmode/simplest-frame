@@ -1,19 +1,18 @@
-import mainLayout from './main-layout';
+import mainLayout from '../layouts/main';
 import { getFramer, setFramer } from '../data/framer';
 import { getCount, incrementCount } from '../data/count';
 
-const html = String.raw;
-
 const build = async (frameData) => {
-    const { request } = frameData;
+    const { payload } = frameData;
     const count = await getCount();
     const lastFramerUsername = await getFramer() || '';
 
-    if (request) {
+    if (payload) {
         incrementCount(count);
-        setFramer(request.untrustedData.fid);
+        setFramer(payload.untrustedData.fid);
     }
 
+    const html = String.raw;
     const frameHTML = html`
         <fc-frame>
             <div style="font-size: 5em;">
@@ -28,9 +27,16 @@ const build = async (frameData) => {
     return mainLayout(frameData, frameHTML);
 }
 
-export const buttons = html`
-    <meta property="fc:frame:button:1" content="Frame me!" />
-`;
+export const buttons = [
+    { 
+        label: 'Frame me!',
+        goTo: 'count',
+    },
+    { 
+        label: 'View credits',
+        goTo: 'credits',
+    }
+]
 
 export default {
     build,

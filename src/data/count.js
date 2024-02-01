@@ -1,7 +1,7 @@
 import { getStore } from '@netlify/blobs';
 
 const getCount = async() => {
-    const store = getStore('frameState');
+    const store = getStore('gameState');
     let rawCount = await store.get('count');
     let count = parseInt(rawCount);
     if (Number.isNaN(count)) count = 0;
@@ -9,8 +9,7 @@ const getCount = async() => {
 }
 
 const incrementCount = async(currentCount) => {
-    console.log("count", currentCount);
-    const store = getStore('frameState');
+    const store = getStore('gameState');
     const newCount = currentCount+1;
     await store.set('count', newCount);
 }
