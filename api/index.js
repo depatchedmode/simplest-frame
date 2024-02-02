@@ -8,7 +8,7 @@ export default async (req, context) => {
     let from = 'poster';
     let buttonId = null;
     const payload = await parseRequest(req);
-    let isOriginal = false;
+    let isOriginal = true;
     if (payload) {
         const requestURL = new URL(req.url);
         from = requestURL.searchParams.get('frame');
@@ -31,8 +31,10 @@ export default async (req, context) => {
     }
 }
 
-const isOriginalCast = (hash) => {
-    return false
+const isOriginalCast = (currHash) => {
+    const ogHash = process.env.BOUND_CAST_HASH;
+    console.log(ogHash,currHash);
+    return ogHash ? currHash == ogHash : true;
 }
 
 const respondWithRedirect = (redirectUrl) => {
