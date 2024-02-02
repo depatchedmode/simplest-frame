@@ -3,6 +3,7 @@
 ## A zero-cost, zero-framework, dynamic Farcaster Frame template
 
 ### My needs for starting this were:
+
 1. **🚱 Zero Framework:** Didn't want a framework baked in, and most options default to Next.js/React
 2. **🆓 Zero Cost:** Frames are for experiments! Experimenting is more fruitful when it's free.
 3. **🧱 Stable:** The domain and its attached state should be reasonably stable over the horizon of an experiment. Replit can only give you this at cost (see above)
@@ -12,6 +13,7 @@
 
 ### Example
 
+![simplest-frame](https://github.com/depatchedmode/simplest-frame/assets/84613835/1ca2f2e6-767d-497a-ab88-96e26a7cbef8)
 https://warpcast.com/depatchedmode/0xecad681e
 
 ### Getting started
