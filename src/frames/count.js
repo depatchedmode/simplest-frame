@@ -4,13 +4,15 @@ import { getCount, incrementCount } from '../data/count';
 
 const build = async (frameData) => {
     const { payload } = frameData;
-    const count = await getCount();
-    const lastFramerUsername = await getFramer() || '';
+    let count = await getCount();
+    const validData = payload?.validData;
+    const isValid = validData?.valid;
 
-    if (payload) {
-        incrementCount(count);
-        setFramer(payload.untrustedData.fid);
+    if (payload && isValid) {
+        count = await incrementCount(count);
+        setFramer(validData.message.data.fid);
     }
+    const lastFramerUsername = await getFramer() || '';
 
     const html = String.raw;
     const frameHTML = html`

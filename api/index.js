@@ -3,17 +3,20 @@ import frames from '../src/frames';
 import { parseRequest, objectToURLSearchParams } from '../modules/utils';
 import buildButtons from '../modules/buildButtons';
 import getTargetFrame from '../modules/getTargetFrame';
+import { validateMessage } from '../src/data/message';
 
 export default async (req, context) => {
     let from = 'poster';
     let buttonId = null;
     const payload = await parseRequest(req);
     let isOriginal = true;
+
     if (payload) {
         const requestURL = new URL(req.url);
         from = requestURL.searchParams.get('frame');
         buttonId = payload.untrustedData?.buttonIndex;
         isOriginal = isOriginalCast(payload.untrustedData.castId.hash);
+        payload.validData = await validateMessage(payload.trustedData.messageBytes);
     }
 
     let { frameSrc, frameName, redirectUrl } = getTargetFrame(from,buttonId,frames);
@@ -33,7 +36,6 @@ export default async (req, context) => {
 
 const isOriginalCast = (currHash) => {
     const ogHash = process.env.BOUND_CAST_HASH;
-    console.log(ogHash,currHash);
     return ogHash ? currHash == ogHash : true;
 }
 
