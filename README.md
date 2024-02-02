@@ -10,6 +10,10 @@
 5. **🤤 Small:** and hopefully easy. Nobody to impress here.
 6. **😎 Cool Tech:** We want to be at the 🤬 edge here, people!
 
+### Example
+
+https://warpcast.com/depatchedmode/0xecad681e
+
 ### Getting started
 
 1. Clone the repo
