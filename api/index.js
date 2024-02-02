@@ -5,8 +5,6 @@ import buildButtons from '../modules/buildButtons';
 import getTargetFrame from '../modules/getTargetFrame';
 
 export default async (req, context) => {
-    const debug = process.env.DEBUG_MODE;
-    const host = process.env.URL;
     const payload = await parseRequest(req);
     let from = 'poster';
     let buttonId = null;
@@ -17,7 +15,33 @@ export default async (req, context) => {
         buttonId = payload.untrustedData?.buttonIndex;
     } 
 
-    const { frameSrc, frameName } = getTargetFrame(from,buttonId,frames);
+    const { frameSrc, frameName, redirectUrl } = getTargetFrame(from,buttonId,frames);
+    if (redirectUrl) {
+        return await respondWithRedirect(redirectUrl);
+    } else if (frameSrc) {
+        return await respondWithFrame(frameName, frameSrc, payload);
+    } else {
+        console.error(`🤷🏻`)
+    }
+}
+
+const respondWithRedirect = (redirectUrl) => {
+    const internalRedirectUrl = new URL(`${process.env.URL}/redirect`) 
+    internalRedirectUrl.searchParams.set('redirectUrl',redirectUrl);
+    return new Response('<div>redirect</div>', 
+        {
+            status: 302,
+            headers: { 
+                'Location': internalRedirectUrl,
+            },
+        }
+    );
+}
+
+const respondWithFrame = async (frameName, frameSrc, payload) => {
+    const debug = process.env.DEBUG_MODE;
+    const host = process.env.URL;
+
     const frameContent = {
         image: ``,
         buttons: buildButtons(frameSrc.buttons),

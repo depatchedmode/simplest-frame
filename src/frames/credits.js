@@ -4,6 +4,10 @@ export default {
         { 
             label: '⬅️ Back',
             goTo: 'count',
+        },
+        {
+            label: '{😺} View on Github',
+            url: 'https://github.com/depatchedmode/simplest-frame'
         }
     ]
 };
