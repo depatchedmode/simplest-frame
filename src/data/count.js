@@ -12,6 +12,7 @@ const incrementCount = async(currentCount) => {
     const store = getStore('gameState');
     const newCount = currentCount+1;
     await store.set('count', newCount);
+    return newCount;
 }
 
 export {
