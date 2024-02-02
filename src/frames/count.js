@@ -29,11 +29,11 @@ const build = async (frameData) => {
 
 export const buttons = [
     { 
-        label: 'Frame me!',
+        label: '🫵 Frame me!',
         goTo: 'count',
     },
     { 
-        label: 'View credits',
+        label: '🎬 View credits',
         goTo: 'credits',
     }
 ]
