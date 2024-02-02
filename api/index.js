@@ -5,17 +5,23 @@ import buildButtons from '../modules/buildButtons';
 import getTargetFrame from '../modules/getTargetFrame';
 
 export default async (req, context) => {
-    const payload = await parseRequest(req);
     let from = 'poster';
     let buttonId = null;
-
+    const payload = await parseRequest(req);
+    let isOriginal = false;
     if (payload) {
         const requestURL = new URL(req.url);
         from = requestURL.searchParams.get('frame');
         buttonId = payload.untrustedData?.buttonIndex;
-    } 
+        isOriginal = isOriginalCast(payload.untrustedData.castId.hash);
+    }
 
-    const { frameSrc, frameName, redirectUrl } = getTargetFrame(from,buttonId,frames);
+    let { frameSrc, frameName, redirectUrl } = getTargetFrame(from,buttonId,frames);
+    if (!isOriginal) {
+        frameName = 'stolen';
+        frameSrc = frames[frameName];
+    }
+
     if (redirectUrl) {
         return await respondWithRedirect(redirectUrl);
     } else if (frameSrc) {
@@ -23,6 +29,10 @@ export default async (req, context) => {
     } else {
         console.error(`🤷🏻`)
     }
+}
+
+const isOriginalCast = (hash) => {
+    return false
 }
 
 const respondWithRedirect = (redirectUrl) => {
