@@ -62,7 +62,7 @@ const respondWithFrame = async (frameName, frameSrc, payload) => {
         image: ``,
         buttons: frameSrc.buttons ? buildButtons(frameSrc.buttons) : [],
         inputs: frameSrc.inputs ? buildInputs(frameSrc.inputs) : [],
-        postURL: `${host}?frame=${frameName}`
+        postURL: `${host}/?frame=${frameName}`
     }
 
     const frameData = {

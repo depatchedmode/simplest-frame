@@ -2,14 +2,14 @@ import satori from "satori";
 import sharp from "sharp";
 import { html } from "satori-html";
 import fonts from "../src/fonts";
+import frames from "../src/frames";
+import { URLSearchParamsToObject } from '../modules/utils';
 
 export default async (req, context) => {
-    const inboundUrl = new URL(req.url);
-    const host = process.env.URL;
-
-    const frameUrl = `${host}/frame?${inboundUrl.searchParams}`;
-    const htmlResponse = await fetch(frameUrl);
-    const markup = await htmlResponse.text();
+    const url = new URL(req.url);
+    const frameData = URLSearchParamsToObject(url.searchParams);
+    const frameSrc = frames[frameData.name];
+    const markup = await frameSrc.build(frameData);
 
     const svg = await satori(
         html(markup), 
@@ -26,7 +26,10 @@ export default async (req, context) => {
     return new Response(response,
         {
             status: 200,
-            headers: { 'Content-Type': 'image/png' }
+            headers: {
+                'Content-Type': 'image/png',
+                'Cache-Control': 'public, max-age=31536000'
+            }
         }
     );
 }
