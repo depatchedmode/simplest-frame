@@ -1,0 +1,13 @@
+import { JSDOM } from 'jsdom';
+import DOMPurify from 'dompurify';
+
+export default (inputText) => {
+    try {
+        const decodedInputText = atob(inputText);
+        const window = new JSDOM('').window;
+        const purify = DOMPurify(window);
+        return purify.sanitize(decodedInputText);
+    } catch {
+        throw new Error(`That ain't no encoded string mfr`)
+    }
+}
