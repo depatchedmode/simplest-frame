@@ -2,6 +2,7 @@ import landingPage from '../src/landing-page';
 import frames from '../src/frames';
 import { parseRequest, objectToURLSearchParams } from '../modules/utils';
 import buildButtons from '../modules/buildButtons';
+import buildInputs from '../modules/buildInputs';
 import getTargetFrame from '../modules/getTargetFrame';
 import { validateMessage } from '../src/data/message';
 
@@ -16,6 +17,7 @@ export default async (req, context) => {
         from = requestURL.searchParams.get('frame');
         buttonId = payload.untrustedData?.buttonIndex;
         isOriginal = isOriginalCast(payload.untrustedData.castId.hash);
+        payload.referringFrame = from;
         payload.validData = await validateMessage(payload.trustedData.messageBytes);
     }
 
@@ -58,7 +60,8 @@ const respondWithFrame = async (frameName, frameSrc, payload) => {
 
     const frameContent = {
         image: ``,
-        buttons: buildButtons(frameSrc.buttons),
+        buttons: frameSrc.buttons ? buildButtons(frameSrc.buttons) : [],
+        inputs: frameSrc.inputs ? buildInputs(frameSrc.inputs) : [],
         postURL: `${host}?frame=${frameName}`
     }
 

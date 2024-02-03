@@ -63,6 +63,7 @@ export default async (frameContent) => {
             <meta property="fc:frame:post_url" content="${frameContent.postURL}" />
             <meta property="fc:frame:image" content="${frameContent.image}" />
             ${frameContent.buttons}
+            ${frameContent.inputs}
 
             <title>🔳 The Simplest Frame</title>
         </head>
