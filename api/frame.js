@@ -3,19 +3,19 @@ import { URLSearchParamsToObject } from '../modules/utils';
 
 export default async (req, context) => {
     const url = new URL(req.url);
-    const frameData = URLSearchParamsToObject(url.searchParams);
-    const frameSrc = frames[frameData.name];
+    const params = URLSearchParamsToObject(url.searchParams);
+    const targetFrameSrc = frames[params.targetFrameName];
 
-    if (frameSrc.image) {
-        const image = `${process.env.URL}${frameSrc.image}`
+    if (targetFrameSrc.image) {
+        const image = `${process.env.URL}${targetFrameSrc.image}`
         return new Response(image,
             {
                 status: 200,
                 headers: { 'Content-Type': 'image/png' },
             }
         );
-    } else if (frameSrc.build) {
-        const markup = await frameSrc.build(frameData);
+    } else if (targetFrameSrc.build) {
+        const markup = await targetFrameSrc.build(params);
         return new Response(markup,
             {
                 status: 200,

@@ -1,6 +1,6 @@
 import fonts from '../fonts';
 
-export default (frameData, frameHTML) => {
+export default (payload, frameHTML) => {
     const fontFile = fonts[0].file; // TODO: eventually we'll have more than one font
     const fontName = fonts[0].name;
     const html = String.raw;

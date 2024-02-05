@@ -1,9 +1,10 @@
 export default {
+    name: 'stolen',
     image: `/images/stolen.png`,
     buttons: [
         {
             label: '👩‍🎤 View original cast',
-            url: `${process.env.BOUND_CAST_URL}`
+            url: `${process.env.STOLEN_REDIRECT_URL}`
         }
     ]
 };

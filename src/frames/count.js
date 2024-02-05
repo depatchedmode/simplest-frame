@@ -3,16 +3,14 @@ import { getFramer, setFramer } from '../data/framer';
 import { getCount, incrementCount } from '../data/count';
 import safeDecode from '../../modules/safeDecode';
 
-const build = async (frameData) => {
-    const { payload } = frameData;
+const build = async (payload) => {
     let count = await getCount();
     const validData = payload?.validData;
-    const isValid = validData?.valid;
     
-    if (payload && isValid && payload.referringFrame == 'count') {
+    if (payload.validData && payload.referringFrame == 'count') {
         count = await incrementCount(count);
-        const tauntInput = validData.message.data.frameActionBody.inputText;
-        await setFramer(validData.message.data.fid, tauntInput);
+        const tauntInput = validData.data.frameActionBody.inputText;
+        await setFramer(validData.data.fid, tauntInput);
     }
 
     const { username, taunt } = await getFramer() || '';
@@ -37,7 +35,7 @@ const build = async (frameData) => {
         </fc-frame>
     `;
 
-    return mainLayout(frameData, frameHTML);
+    return mainLayout(payload, frameHTML);
 }
 
 export const inputs = [
@@ -59,6 +57,7 @@ export const buttons = [
 ]
 
 export default {
+    name: 'stolen',
     build,
     buttons,
     inputs
