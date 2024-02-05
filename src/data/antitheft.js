@@ -50,14 +50,16 @@ const removeBoundCast = (castHash) => removeFromList(getBoundCasts, setBoundCast
 // 1. The castAuthorID is in boundAccounts.
 // 2. The castHash is in boundCasts.
 // 3. Both boundCasts & boundAccounts are empty.
-const isFrameStolen = async (castHash, castAuthorID) => {
+const isFrameStolen = async (payload) => {
+    const { fid: castAuthorID, hash: castHash } = payload.validData.data.frameActionBody.castId;
     const boundCasts = await getBoundCasts();
     const boundAccounts = await getBoundAccounts();
 
-    // cast FID to string
     const isAuthorAllowed = boundAccounts.includes(castAuthorID) || boundAccounts.length === 0;
     const isCastAllowed = boundCasts.includes(castHash) || boundCasts.length === 0;
-    return !isAuthorAllowed || !isCastAllowed;
+    const isFirstParty = payload.untrustedData.url.indexOf(process.env.URL) > -1;
+
+    return !isFirstParty || !isAuthorAllowed || !isCastAllowed;
 };
 
 export {
