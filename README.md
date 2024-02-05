@@ -34,7 +34,7 @@ https://warpcast.com/depatchedmode/0xecad681e
 2. Install the [Netlify CLI](https://docs.netlify.com/cli/get-started/)
 3. Copy `sample.env` to `.env` and add:
    + your Netlify Key, for deploys: `NETLIFY_AUTH_TOKEN`
-   + a [Wield Key](https://docs.wield.co/farcaster/api() for reading Farcaster state: `WIELD_API_KEY`
+   + a [Wield Key](https://docs.wield.co/farcaster/api) for reading Farcaster state: `WIELD_API_KEY`
 4. `npm install`
 5. `netlify dev`
 
