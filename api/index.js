@@ -26,8 +26,6 @@ export default async (req, context) => {
             frameIsStolen = await isFrameStolen(hash, fid);
         }
 
-        console.log(payload?.validData?.data);
-
         const { targetFrameSrc, targetFrameName, redirectUrl } = getTargetFrame(from, buttonId, frames);
 
         if (redirectUrl) {
