@@ -1,5 +1,6 @@
 const html = String.raw;
 export default {
+    name: 'poster',
     image: `/images/poster.png`,
     buttons: [
         { 

@@ -9,7 +9,10 @@ const validateMessage = async(messageBytes) => {
         },
         body: Buffer.from(messageBytes, 'hex'),
     })
-        .then(response => response.json() )
+        .then(async(response) => {
+            const parsedResponse = await response.json();
+            return parsedResponse.valid ? parsedResponse.message : false;
+        })
         .catch(error => console.error('Error:', error));
 }
 

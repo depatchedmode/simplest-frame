@@ -1,18 +1,18 @@
 const DEFAULT_FRAME = 'poster';
 
 export default (name, buttonId, frames) => {
-    let frameName = DEFAULT_FRAME;
+    let targetFrameName = DEFAULT_FRAME;
     let redirectUrl = null;
     if (name && buttonId) {
         const originFrame = frames[name];
         const button = originFrame.buttons[buttonId-1];
-        frameName = button.goTo;
+        targetFrameName = button.goTo;
         redirectUrl = button.url;
     }
-    const frameSrc = frames[frameName];
+    const targetFrameSrc = frames[targetFrameName];
     return {
-        frameSrc,
-        frameName,
+        targetFrameSrc,
+        targetFrameName,
         redirectUrl
     };
 }

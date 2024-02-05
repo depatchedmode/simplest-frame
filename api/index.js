@@ -5,41 +5,41 @@ import buildButtons from '../modules/buildButtons';
 import buildInputs from '../modules/buildInputs';
 import getTargetFrame from '../modules/getTargetFrame';
 import { validateMessage } from '../src/data/message';
+import { isFrameStolen } from '../src/data/antitheft';
 
 export default async (req, context) => {
-    let from = 'poster';
-    let buttonId = null;
-    const payload = await parseRequest(req);
-    let isOriginal = true;
-
-    if (payload) {
+    try {
         const requestURL = new URL(req.url);
-        from = requestURL.searchParams.get('frame');
-        buttonId = payload.untrustedData?.buttonIndex;
-        isOriginal = isOriginalCast(payload.untrustedData.castId.hash);
-        payload.referringFrame = from;
-        payload.validData = await validateMessage(payload.trustedData.messageBytes);
-    }
+        const payload = await parseRequest(req);
+        let from = requestURL.searchParams.get('frame');
+        let buttonId = null;
+        let frameIsStolen = false;
 
-    let { frameSrc, frameName, redirectUrl } = getTargetFrame(from,buttonId,frames);
-    if (!isOriginal) {
-        frameName = 'stolen';
-        frameSrc = frames[frameName];
-    }
+        if (payload) {
+            payload.referringFrame = from;
+            payload.validData = await validateMessage(payload.trustedData.messageBytes);
+        }
 
-    if (redirectUrl) {
-        return await respondWithRedirect(redirectUrl);
-    } else if (frameSrc) {
-        return await respondWithFrame(frameName, frameSrc, payload);
-    } else {
-        console.error(`🤷🏻`)
-    }
-}
+        if (payload?.validData) {
+            buttonId = payload.validData.data.frameActionBody.buttonIndex;
+            frameIsStolen = await isFrameStolen(payload);
+        }
 
-const isOriginalCast = (currHash) => {
-    const ogHash = process.env.BOUND_CAST_HASH;
-    return ogHash ? currHash == ogHash : true;
-}
+        const { targetFrameSrc, targetFrameName, redirectUrl } = getTargetFrame(from, buttonId, frames);
+
+        if (redirectUrl) {
+            return await respondWithRedirect(redirectUrl);
+        } else if (frameIsStolen) {
+            return await respondWithFrame('stolen', frames['stolen'], payload);
+        }   else if (targetFrameSrc) {
+            return await respondWithFrame(targetFrameName, targetFrameSrc, payload);
+        } else {
+            console.error(`Unknown frame requested: ${targetFrameName}`);
+        }
+    } catch (error) {
+        console.error(`Error processing request: ${error}`);
+    }
+};
 
 const respondWithRedirect = (redirectUrl) => {
     const internalRedirectUrl = new URL(`${process.env.URL}/redirect`) 
@@ -54,34 +54,20 @@ const respondWithRedirect = (redirectUrl) => {
     );
 }
 
-const respondWithFrame = async (frameName, frameSrc, payload) => {
-    const debug = process.env.DEBUG_MODE;
+const respondWithFrame = async (targetFrameName, targetFrameSrc, payload) => {
+    const searchParams = {
+        targetFrameName,
+        payload
+    }
     const host = process.env.URL;
-
     const frameContent = {
-        image: ``,
-        buttons: frameSrc.buttons ? buildButtons(frameSrc.buttons) : [],
-        inputs: frameSrc.inputs ? buildInputs(frameSrc.inputs) : [],
-        postURL: `${host}/?frame=${frameName}`
-    }
-
-    const frameData = {
-        name: frameName,
-        server: {
-            host,
-            debug
-        },
-        payload,
-    }
-
-    if (frameSrc.image) {
-        frameContent.image = `${host}${frameSrc.image}`;
-    } else if (frameSrc.build) {
-        const searchParams = objectToURLSearchParams(frameData);
-        frameContent.image = `${host}/og-image?${searchParams}`;
-    } else {
-        console.error(`Each frame requires an image path or a build function`)
-    }
+        image: targetFrameSrc.image ? 
+            `${host}/${targetFrameSrc.image}` : 
+            `${host}/og-image?${objectToURLSearchParams(searchParams)}` || '',
+        buttons: targetFrameSrc.buttons ? buildButtons(targetFrameSrc.buttons) : '',
+        inputs: targetFrameSrc.inputs ? buildInputs(targetFrameSrc.inputs) : '',
+        postURL: `${host}/?frame=${targetFrameName}`
+    };
     
     return new Response(await landingPage(frameContent), 
         {
@@ -91,7 +77,7 @@ const respondWithFrame = async (frameName, frameSrc, payload) => {
             },
         }
     );
-}
+};
 
 export const config = {
     path: "/"

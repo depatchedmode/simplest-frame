@@ -1,4 +1,5 @@
 export default {
+    name: 'credits',
     image: `/images/credits.png`,
     buttons: [
         { 
