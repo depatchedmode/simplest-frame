@@ -1,4 +1,4 @@
-![Simplest Frame](https://github.com/depatchedmode/simplest-frame/assets/84613835/b7477371-226f-4c38-b3a9-d362b1a9f0d7)
+![poster-animated](https://github.com/depatchedmode/simplest-frame/assets/84613835/7dadc2cb-7410-4e8d-b8bb-6c314655e5fc)
 
 ## A zero-cost, zero-framework, dynamic Farcaster Frame template
 
