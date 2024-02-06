@@ -33,8 +33,8 @@ https://warpcast.com/depatchedmode/0xecad681e
 1. Clone the repo
 2. Install the [Netlify CLI](https://docs.netlify.com/cli/get-started/)
 3. Copy `sample.env` to `.env` and add:
-   + your Netlify Key, for deploys: `NETLIFY_AUTH_TOKEN`
-   + a [Wield Key](https://docs.wield.co/farcaster/api) for reading Farcaster state: `WIELD_API_KEY`
+    + your Netlify Key, for deploys: `NETLIFY_AUTH_TOKEN`
+    + a [Wield Key](https://docs.wield.co/farcaster/api) for reading Farcaster state: `WIELD_API_KEY`
 4. `npm install`
 5. `netlify dev`
 
@@ -43,8 +43,8 @@ https://warpcast.com/depatchedmode/0xecad681e
 #### Quick & easy: Proxying to the WWW
 1. Run `netlify dev --live` will give [proxy your local machine](https://docs.netlify.com/cli/local-development/#share-a-live-development-server) to the *world* *wide* *web*.
 2. Test that link in either:
-  + The Warpcast Embed UI: https://warpcast.com/~/developers/embeds
-  + The Frams.js hosted debugger: https://debugger.framesjs.org/debug
+    + The Warpcast Embed UI: https://warpcast.com/~/developers/embeds
+    + The Frams.js hosted debugger: https://debugger.framesjs.org/debug
 
 #### Local & reliable:
 
