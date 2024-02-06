@@ -1,72 +1,65 @@
+import { getFrameMessage } from "frames.js"
 import landingPage from '../src/landing-page';
-import frames from '../src/frames';
 import { parseRequest, objectToURLSearchParams } from '../modules/utils';
 import buildButtons from '../modules/buildButtons';
 import buildInputs from '../modules/buildInputs';
 import getTargetFrame from '../modules/getTargetFrame';
-import { validateMessage } from '../src/data/message';
-import { isFrameStolen } from '../src/data/antitheft';
 
 export default async (req, context) => {
     try {
         const requestURL = new URL(req.url);
         const payload = await parseRequest(req);
-        let from = requestURL.searchParams.get('frame');
-        let buttonId = null;
-        let frameIsStolen = false;
+        const frameMessage = payload ? await getFrameMessage(payload, {
+            hubHttpUrl: process.env.FARCASTER_HUB
+        }) : {};
 
-        if (payload) {
-            payload.referringFrame = from;
-            payload.validData = await validateMessage(payload.trustedData.messageBytes);
-        }
+        // extending the frames.js frameMessage object with a few things 
+        // we require
+        // TODO: see about refactoring this more towards the frames.js style
+        frameMessage.from = requestURL.searchParams.get('frame');
+        frameMessage.requestURL = payload?.untrustedData.url;
 
-        if (payload?.validData) {
-            buttonId = payload.validData.data.frameActionBody.buttonIndex;
-            frameIsStolen = await isFrameStolen(payload);
-        }
+        const { targetFrame, redirectURL } = await getTargetFrame(frameMessage);
 
-        const { targetFrameSrc, targetFrameName, redirectUrl } = getTargetFrame(from, buttonId, frames);
-
-        if (redirectUrl) {
-            return await respondWithRedirect(redirectUrl);
-        } else if (frameIsStolen) {
-            return await respondWithFrame('stolen', frames['stolen'], payload);
-        }   else if (targetFrameSrc) {
-            return await respondWithFrame(targetFrameName, targetFrameSrc, payload);
+        if (redirectURL) {
+            return await respondWithRedirect(redirectURL);
+        } else if (targetFrame) {
+            return await respondWithFrame(targetFrame, frameMessage);
         } else {
-            console.error(`Unknown frame requested: ${targetFrameName}`);
+            console.error(`Unknown frame requested: ${targetFrame.name}`);
         }
     } catch (error) {
         console.error(`Error processing request: ${error}`);
     }
 };
 
-const respondWithRedirect = (redirectUrl) => {
-    const internalRedirectUrl = new URL(`${process.env.URL}/redirect`) 
-    internalRedirectUrl.searchParams.set('redirectUrl',redirectUrl);
+const respondWithRedirect = (redirectURL) => {
+    const internalRedirectURL = new URL(`${process.env.URL}/redirect`) 
+    internalRedirectURL.searchParams.set('redirectURL',redirectURL);
     return new Response('<div>redirect</div>', 
         {
             status: 302,
             headers: { 
-                'Location': internalRedirectUrl,
+                'Location': internalRedirectURL,
             },
         }
     );
 }
 
-const respondWithFrame = async (targetFrameName, targetFrameSrc, payload) => {
+const respondWithFrame = async (targetFrame, frameMessage) => {
     const searchParams = {
-        targetFrameName,
-        payload
+        targetFrameName: targetFrame.name, 
+        frameMessage
     }
+    
     const host = process.env.URL;
     const frameContent = {
-        image: targetFrameSrc.image ? 
-            `${host}/${targetFrameSrc.image}` : 
+        image: targetFrame.image ? 
+            `${host}/${targetFrame.image}` : 
             `${host}/og-image?${objectToURLSearchParams(searchParams)}` || '',
-        buttons: targetFrameSrc.buttons ? buildButtons(targetFrameSrc.buttons) : '',
-        inputs: targetFrameSrc.inputs ? buildInputs(targetFrameSrc.inputs) : '',
-        postURL: `${host}/?frame=${targetFrameName}`
+        buttons: targetFrame.buttons ? buildButtons(targetFrame.buttons) : '',
+        inputs: targetFrame.inputs ? buildInputs(targetFrame.inputs) : '',
+        postURL: `${host}/?frame=${targetFrame.name}`
     };
     
     return new Response(await landingPage(frameContent), 
