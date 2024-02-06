@@ -1,18 +1,23 @@
 const DEFAULT_FRAME = 'poster';
+import frames from '../src/frames';
+import { isFrameStolen } from './antitheft';
 
-export default (name, buttonId, frames) => {
+export default async (frameMessage) => {
+    const frameIsStolen = await isFrameStolen(frameMessage);
     let targetFrameName = DEFAULT_FRAME;
-    let redirectUrl = null;
-    if (name && buttonId) {
-        const originFrame = frames[name];
-        const button = originFrame.buttons[buttonId-1];
+    let redirectURL = null;
+    console.log('getTargetFrame:frameIsStolen', frameIsStolen);
+    if (frameIsStolen) {
+        targetFrameName = 'stolen';
+    } else if (frameMessage.buttonIndex) {
+        const originFrame = frames[frameMessage.from];
+        const button = originFrame.buttons[frameMessage.buttonIndex-1];
         targetFrameName = button.goTo;
-        redirectUrl = button.url;
-    }
-    const targetFrameSrc = frames[targetFrameName];
+        redirectURL = button.url;
+    } 
+    
     return {
-        targetFrameSrc,
-        targetFrameName,
-        redirectUrl
-    };
+        targetFrame: frames[targetFrameName],
+        redirectURL
+    }
 }

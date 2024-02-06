@@ -1,5 +1,6 @@
 import { getStore } from '@netlify/blobs';
 import { getUsername } from './username';
+import sanitize from '../../modules/sanitize';
 
 const getFramer = async() => {
     const store = getStore('gameState');
@@ -15,7 +16,7 @@ const getFramer = async() => {
 const setFramer = async(fid, taunt) => {
     const store = getStore('gameState');
     await store.set('framer', fid);
-    await store.set('taunt', taunt);
+    await store.set('taunt', sanitize(taunt));
 }
 
 export {

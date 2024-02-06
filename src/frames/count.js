@@ -1,16 +1,14 @@
 import mainLayout from '../layouts/main';
 import { getFramer, setFramer } from '../data/framer';
 import { getCount, incrementCount } from '../data/count';
-import safeDecode from '../../modules/safeDecode';
 
-const build = async (payload) => {
+const build = async (frameMessage) => {
     let count = await getCount();
-    const validData = payload?.validData;
     
-    if (payload.validData && payload.referringFrame == 'count') {
+    if (frameMessage.from == 'count') {
         count = await incrementCount(count);
-        const tauntInput = validData.data.frameActionBody.inputText;
-        await setFramer(validData.data.fid, tauntInput);
+        const tauntInput = frameMessage.inputText;
+        await setFramer(frameMessage.requesterFid, tauntInput);
     }
 
     const { username, taunt } = await getFramer() || '';
@@ -18,7 +16,7 @@ const build = async (payload) => {
     let tauntOutput;
     tauntOutput = taunt ? `
         <div style="font-size: 2em; line-height: 1.3; color: #cacaca; margin-top: 1em; padding: 0 2rem; text-align: center;">
-            "${safeDecode(taunt)}"
+            "${taunt}"
         </div>
         ` : '';
 
@@ -35,7 +33,7 @@ const build = async (payload) => {
         </fc-frame>
     `;
 
-    return mainLayout(payload, frameHTML);
+    return mainLayout(frameMessage, frameHTML);
 }
 
 export const inputs = [
@@ -57,7 +55,7 @@ export const buttons = [
 ]
 
 export default {
-    name: 'stolen',
+    name: 'count',
     build,
     buttons,
     inputs
