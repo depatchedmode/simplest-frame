@@ -2,7 +2,7 @@
 
 ## A zero-cost, zero-framework, dynamic Farcaster Frame template
 
-This is the "simplest" version of a Frame that can do all of the things a Frame should be able to do. It may be more than you need. It may be less. But it's a great place to start, IMHO.
+This is the "simplest" version of a Frame that can do all of the things a Frame should be able to do. It may be more than you need. It may be less. But it's a great place to start, IMHO. And it is indebted to all the great work by the team over at https://framesjs.org
 
 ### My needs for starting this were:
 
