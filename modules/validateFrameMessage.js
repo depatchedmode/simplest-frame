@@ -1,4 +1,4 @@
-const validateMessage = async(messageBytes) => {
+export default async(messageBytes) => {
     if (!process.env.FARCASTER_HUB) throw new Error("FARCASTER_HUB is not set");
     if (!messageBytes) throw new Error("No data provided");
 
@@ -14,8 +14,4 @@ const validateMessage = async(messageBytes) => {
             return parsedResponse.valid ? parsedResponse.message : false;
         })
         .catch(error => console.error('Error:', error));
-}
-
-export {
-    validateMessage,
 }

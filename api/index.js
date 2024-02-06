@@ -4,8 +4,8 @@ import { parseRequest, objectToURLSearchParams } from '../modules/utils';
 import buildButtons from '../modules/buildButtons';
 import buildInputs from '../modules/buildInputs';
 import getTargetFrame from '../modules/getTargetFrame';
-import { validateMessage } from '../src/data/message';
-import { isFrameStolen } from '../src/data/antitheft';
+import validateFrameMessage from '../modules/validateFrameMessage';
+import { isFrameStolen } from '../modules/antitheft';
 
 export default async (req, context) => {
     try {
@@ -17,7 +17,7 @@ export default async (req, context) => {
 
         if (payload) {
             payload.referringFrame = from;
-            payload.validData = await validateMessage(payload.trustedData.messageBytes);
+            payload.validData = await validateFrameMessage(payload.trustedData.messageBytes);
         }
 
         if (payload?.validData) {
