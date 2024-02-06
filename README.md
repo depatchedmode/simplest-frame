@@ -40,8 +40,17 @@ https://warpcast.com/depatchedmode/0xecad681e
 
 ### Testing
 
+#### Quick & easy: Proxying to the WWW
 1. Run `netlify dev --live` will give [proxy your local machine](https://docs.netlify.com/cli/local-development/#share-a-live-development-server) to the *world* *wide* *web*.
-2. Test that link in the Warpcast Embed UI: https://warpcast.com/~/developers/embeds
+2. Test that link in either:
+  + The Warpcast Embed UI: https://warpcast.com/~/developers/embeds
+  + The Frams.js hosted debugger: https://debugger.framesjs.org/debug
+
+#### Local & reliable:
+
+Follow instructions here on how to setup the Frame.js debugger locally: https://github.com/depatchedmode/simplest-frame/issues/22#issuecomment-1930909371
+
+**Note: you'll still need to be connected to the internet for Hubs communication ... unless you run your own locally**
 
 ### Defining your Frame
 
