@@ -48,6 +48,7 @@ const respondWithRedirect = (redirectURL) => {
 
 const respondWithFrame = async (targetFrame, frameMessage) => {
     const searchParams = {
+        t: new Date().valueOf(),
         targetFrameName: targetFrame.name, 
         frameMessage
     }
