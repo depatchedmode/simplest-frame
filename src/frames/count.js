@@ -23,8 +23,8 @@ const build = async (frameMessage) => {
     const html = String.raw;
     const frameHTML = html`
         <fc-frame>
-            <div style="font-size: 5em;">
-                i've been framed ${count || 0} times
+            <div style="display: flex; gap: 1rem; font-size: 5em;">
+                i've been framed <span style="font-family:'Redaction-100'">${count || 0}</span> times
             </div>
             <div style="font-size: 2em; margin-top: 1em">
                 last framed by @${username || ''}
