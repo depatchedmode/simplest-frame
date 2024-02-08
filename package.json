@@ -7,7 +7,7 @@
     "dompurify": "^3.0.8",
     "frames.js": "^0.1.1",
     "jsdom": "^24.0.0",
-    "satori": "^0.10.11",
+    "satori": "^0.10.13",
     "satori-html": "^0.3.2",
     "sharp": "^0.32.6"
   }
