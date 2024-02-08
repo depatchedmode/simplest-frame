@@ -1,5 +1,4 @@
 import { getStore } from '@netlify/blobs';
-import frame from '../api/frame';
 
 // Utility functions to abstract the fetching and setting operations
 const fetchData = async (key) => {
@@ -52,10 +51,8 @@ const removeBoundCast = (castHash) => removeFromList(getBoundCasts, setBoundCast
 // 2. The castHash is in boundCasts.
 // 3. Both boundCasts & boundAccounts are empty.
 const isFrameStolen = async (frameMessage) => {
-    console.log('isFrameStolen', frameMessage);
     const { castId, requestURL } = frameMessage;
     if (!castId || !requestURL) {
-        console.log('isFrameStolen:quickExit', castId, requestURL);
         return false;
     }
 
@@ -66,10 +63,6 @@ const isFrameStolen = async (frameMessage) => {
     const isAuthorAllowed = boundAccounts.includes(castAuthorID) || boundAccounts.length === 0;
     const isCastAllowed = boundCasts.includes(castHash) || boundCasts.length === 0;
     const isFirstParty = requestURL ? requestURL.indexOf(process.env.URL) > -1 : true;
-
-    console.log('isAuthorAllowed', isAuthorAllowed, castAuthorID, boundAccounts);
-    console.log('isCastAllowed', isCastAllowed, castHash, boundCasts);
-    console.log('isFirstParty', isFirstParty);
 
     return !isFirstParty || !isAuthorAllowed || !isCastAllowed;
 };
