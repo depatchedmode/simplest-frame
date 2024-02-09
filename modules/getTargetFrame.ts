@@ -1,6 +1,6 @@
 const DEFAULT_FRAME = 'poster';
-import frames from '../src/frames';
-import { isFrameStolen } from './antitheft';
+import frames from '../src/frames/index.js';
+import { isFrameStolen } from './antitheft.js';
 
 export default async (frameMessage) => {
     const frameIsStolen = await isFrameStolen(frameMessage);

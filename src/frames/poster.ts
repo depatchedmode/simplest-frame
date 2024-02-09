@@ -1,4 +1,3 @@
-const html = String.raw;
 export default {
     name: 'poster',
     image: `/images/poster-animated.gif`,

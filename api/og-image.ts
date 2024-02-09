@@ -1,22 +1,22 @@
 import satori from "satori";
 import sharp from "sharp";
 import { html } from "satori-html";
-import fonts from "../src/fonts";
-import frames from "../src/frames";
-import { URLSearchParamsToObject } from '../modules/utils';
+import fonts from "../src/fonts.js";
+import frames from "../src/frames/index.js";
+import { URLSearchParamsToObject } from '../modules/utils.js';
 
-export default async (req, context) => {
+export default async (req) => {
     const url = new URL(req.url);
     const params = URLSearchParamsToObject(url.searchParams);
-    const targetFrame = frames[params.targetFrameName];
-    const markup = await targetFrame.build(params.frameMessage);
+    const targetFrame = frames[params['targetFrameName']];
+    const markup = await targetFrame.build(params['frameMessage']);
 
     const svg = await satori(
         html(markup), 
         {
             width: 1200,
             height: 630,
-            fonts
+            fonts: fonts,
         }
     );
     const svgBuffer = Buffer.from(svg);

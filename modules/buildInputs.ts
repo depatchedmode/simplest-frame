@@ -1,8 +1,8 @@
-import buildTextInput from "./buildTextInput";
+import buildTextInput from "./buildTextInput.js";
 
 export default (inputs) => {
     return inputs
-        .map((input, index) => {
+        .map((input) => {
             switch (input.type) {
                 case 'text':
                     return buildTextInput(input);

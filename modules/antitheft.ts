@@ -3,7 +3,7 @@ import { getStore } from '@netlify/blobs';
 // Utility functions to abstract the fetching and setting operations
 const fetchData = async (key) => {
     const store = getStore('antiTheft');
-    let data = await store.get(key, 'json') || [];
+    let data = await store.get(key, { type: 'json' } ) || [];
     if (!data.length) {
         data = process.env[key] ? JSON.parse(process.env[key]) : [];
     }
@@ -24,7 +24,7 @@ const setBoundCasts = (castHashes) => setData('BOUND_CAST_HASHES', castHashes);
 
 // Modified functions to use the updated getters and setters
 const addToList = async (getter, setter, item) => {
-    let list = await getter();
+    const list = await getter();
     if (!list.includes(item)) {
         list.push(item);
         await setter(list);
@@ -32,7 +32,7 @@ const addToList = async (getter, setter, item) => {
 };
 
 const removeFromList = async (getter, setter, item) => {
-    let list = await getter();
+    const list = await getter();
     const index = list.indexOf(item);
     if (index > -1) {
         list.splice(index, 1);
@@ -69,7 +69,7 @@ const isFrameStolen = async (frameMessage) => {
     // record the theft
     if (isStolen) {
         const store = getStore('stolenFrames');
-        const stolenFrame = await store.get(castHash, 'json') || {
+        const stolenFrame = await store.get(castHash, { type: 'json' }) || {
             castHash,
             castAuthorID,
             views: 0,

@@ -1,6 +1,6 @@
-import mainLayout from '../layouts/main';
-import { getFramer, setFramer } from '../data/framer';
-import { getCount, incrementCount } from '../data/count';
+import mainLayout from '../layouts/main.js';
+import { getFramer, setFramer } from '../data/framer.js';
+import { getCount, incrementCount } from '../data/count.js';
 
 const build = async (frameMessage) => {
     let count = await getCount();
@@ -11,10 +11,9 @@ const build = async (frameMessage) => {
         await setFramer(frameMessage.requesterFid, tauntInput);
     }
 
-    const { username, taunt } = await getFramer() || '';
+    const { username, taunt } = await getFramer() || {};
 
-    let tauntOutput;
-    tauntOutput = taunt ? `
+    const tauntOutput = taunt ? `
         <div style="font-size: 2em; line-height: 1.3; color: #cacaca; margin-top: 1em; padding: 0 2rem; text-align: center;">
             "${taunt}"
         </div>

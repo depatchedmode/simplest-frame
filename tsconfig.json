@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext", // or another target appropriate for Netlify's Node.js version
-    "module": "ESNext", // for Node.js compatibility
+    "module": "NodeNext", // for Node.js compatibility
+    "moduleResolution": "NodeNext",
     "outDir": "./built", // where to output JS files
     "rootDir": "./", // where your TS files are located
     "strict": false, // enables strict type-checking options

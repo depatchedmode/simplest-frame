@@ -1,4 +1,4 @@
-import { streamToString } from '../../modules/utils';
+import { streamToString } from '../../modules/utils.js';
 
 const getCast = async(castHash) => {
     const request = await fetch(`https://protocol.wield.co/farcaster/v2/cast?hash=${castHash}`, {

@@ -53,6 +53,7 @@ const URLSearchParamsToObject = (searchParams) => {
     const obj = {};
     
     for (const [key, value] of searchParams.entries()) {
+        // eslint-disable-next-line no-useless-escape
         const keys = key.split(/[\[\]]/g).filter(k => k);
         let currentObj = obj;
         
