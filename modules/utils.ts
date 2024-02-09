@@ -81,7 +81,7 @@ const URLSearchParamsToObject = (searchParams) => {
 
 const loadFont = async (fileName) => {
     try {
-        const filePath = path.join(__dirname, '../src', 'fonts', fileName);
+        const filePath = path.join(__dirname, '../../public', 'fonts', fileName);
         const fontData = await fs.readFile(filePath);
         return fontData;
     } catch (error) {

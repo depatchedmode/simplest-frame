@@ -14,11 +14,14 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+*.js
+
 # sharp issue: https://sharp.pixelplumbing.com/install#cross-platform
 package-lock.json 
 
 node_modules
 dist
+built
 dist-ssr
 *.local
 
