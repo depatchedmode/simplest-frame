@@ -1,11 +1,11 @@
-import { getFrameMessage } from "frames.js"
-import landingPage from '../src/landing-page';
-import { parseRequest, objectToURLSearchParams } from '../modules/utils';
-import buildButtons from '../modules/buildButtons';
-import buildInputs from '../modules/buildInputs';
-import getTargetFrame from '../modules/getTargetFrame';
+import { getFrameMessage } from "frames.js";
+import landingPage from '../src/landing-page.js';
+import { parseRequest, objectToURLSearchParams } from '../modules/utils.js';
+import buildButtons from '../modules/buildButtons.js';
+import buildInputs from '../modules/buildInputs.js';
+import getTargetFrame from '../modules/getTargetFrame.js';
 
-export default async (req, context) => {
+export default async (req) => {
     try {
         const requestURL = new URL(req.url);
         const payload = await parseRequest(req);
@@ -40,7 +40,7 @@ const respondWithRedirect = (redirectURL) => {
         {
             status: 302,
             headers: { 
-                'Location': internalRedirectURL,
+                'Location': internalRedirectURL.toString(),
             },
         }
     );
@@ -48,6 +48,7 @@ const respondWithRedirect = (redirectURL) => {
 
 const respondWithFrame = async (targetFrame, frameMessage) => {
     const searchParams = {
+        t: new Date().valueOf(),
         targetFrameName: targetFrame.name, 
         frameMessage
     }

@@ -1,9 +1,4 @@
-import fonts from './fonts';
-
 export default async (frameContent) => {
-
-    const fontFile = fonts[0].file; // TODO: we'll have more than 1 font at some point
-    const fontName = fonts[0].name;
 
     const html = String.raw;
     const markup = html`
@@ -12,10 +7,10 @@ export default async (frameContent) => {
         <head>
             <style>
                 @font-face {
-                    font-family: "${fontName}";
+                    font-family: "Redaction";
                     src:
-                        local("${fontName}"),
-                        url("/fonts/${fontFile}") format("woff2");
+                        local("Redaction"),
+                        url("/fonts/Redaction-Regular") format("woff2");
                 }
                 :root {
                     --background: white;
@@ -29,7 +24,7 @@ export default async (frameContent) => {
                 }
                 body {
                     padding: 2rem;
-                    font-family: "${fontName}";
+                    font-family: "Redaction";
                     background: var(--background);
                     color: var(--text);
                     display: flex;
@@ -44,17 +39,6 @@ export default async (frameContent) => {
                 img {
                     max-width: 100%;
                     border: 4px inset var(--text);
-                }
-                .buttons {
-                    display: flex;
-                }
-                .buttons form {
-                    flex-grow: 1;
-                }
-                input[type=submit] {
-                    font-family: "${fontName}";
-                    padding: 1rem;
-                    display: block;
                 }
             </style>
             

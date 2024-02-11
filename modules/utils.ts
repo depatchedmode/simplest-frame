@@ -53,6 +53,7 @@ const URLSearchParamsToObject = (searchParams) => {
     const obj = {};
     
     for (const [key, value] of searchParams.entries()) {
+        // eslint-disable-next-line no-useless-escape
         const keys = key.split(/[\[\]]/g).filter(k => k);
         let currentObj = obj;
         
@@ -81,7 +82,7 @@ const URLSearchParamsToObject = (searchParams) => {
 
 const loadFont = async (fileName) => {
     try {
-        const filePath = path.join(__dirname, '../src', 'fonts', fileName);
+        const filePath = path.join(__dirname, '../../public', 'fonts', fileName);
         const fontData = await fs.readFile(filePath);
         return fontData;
     } catch (error) {

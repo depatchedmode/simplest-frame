@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // or another target appropriate for Netlify's Node.js version
+    "module": "NodeNext", // for Node.js compatibility
+    "moduleResolution": "NodeNext",
+    "outDir": "./built", // where to output JS files
+    "rootDir": "./", // where your TS files are located
+    "strict": false, // enables strict type-checking options
+    "esModuleInterop": true, // allows default imports from modules with no default export
+    "skipLibCheck": true, // skips type checking of all declaration files (*.d.ts)
+    "forceConsistentCasingInFileNames": true // ensures case matches between imports and files
+  },
+  "include": ["api/**/*.ts", "modules/**/*.ts", "src/**/*.ts"], // specify the files to be included
+  "exclude": ["node_modules", "public", "built"] // specify the folders to exclude
+}

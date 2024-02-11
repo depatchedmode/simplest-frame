@@ -1,6 +1,6 @@
 import { getStore } from '@netlify/blobs';
-import { getUsername } from './username';
-import sanitize from '../../modules/sanitize';
+import { getUsername } from './username.js';
+import sanitize from '../../modules/sanitize.js';
 
 const getFramer = async() => {
     const store = getStore('gameState');

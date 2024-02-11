@@ -1,4 +1,4 @@
-import { streamToString } from '../../modules/utils';
+import { streamToString } from '../../modules/utils.js';
 
 const getUsername = async(fid) => {
     const request = await fetch(`https://protocol.wield.co/farcaster/v2/user?fid=${fid}`, {

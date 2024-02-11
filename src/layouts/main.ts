@@ -1,23 +1,19 @@
-import fonts from '../fonts';
-
 export default (payload, frameHTML) => {
-    const fontFile = fonts[0].file; // TODO: eventually we'll have more than one font
-    const fontName = fonts[0].name;
     const html = String.raw;
     const markup = html`
         <html>
         <head>
             <style>
                 @font-face {
-                    font-family: "${fontName}";
+                    font-family: "Redaction";
                     src:
-                        local("${fontName}"),
-                        url("/fonts/${fontFile}") format("woff2");
+                        local("Redaction"),
+                        url("/fonts/Redaction-Regular") format("woff2");
                 }
                 body {
                     margin: 0;
                     padding: 0;
-                    font-family: "${fontName}";
+                    font-family: "Redaction";
                     background: black;
                 }
                 fc-frame {

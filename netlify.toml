@@ -1,8 +1,8 @@
 [build]
-  functions = "/api"
-  publish = "/public"
+  publish = "public/"
 
 [functions]
+  directory = "api/"
   node_bundler = "esbuild"
   external_node_modules = ["sharp"]
   included_files = ["node_modules/sharp/**/*"]
