@@ -5,7 +5,7 @@
   "dependencies": {
     "@netlify/blobs": "^6.4.2",
     "dompurify": "^3.0.8",
-    "frames.js": "^0.4.3",
+    "frames.js": "^0.5.0",
     "jsdom": "^24.0.0",
     "satori": "^0.10.13",
     "satori-html": "^0.3.2",
