@@ -2,7 +2,7 @@ import { getStore } from '@netlify/blobs';
 
 const getCount = async() => {
     const store = getStore('gameState');
-    let rawCount = await store.get('count');
+    const rawCount = await store.get('count');
     let count = parseInt(rawCount);
     if (Number.isNaN(count)) count = 0;
     return count;

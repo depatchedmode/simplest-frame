@@ -1,8 +1,6 @@
-import { getFrameMessage } from "frames.js";
+import { GetFrameHtmlOptions, getFrameHtml, getFrameMessage } from "frames.js";
 import landingPage from '../src/landing-page.js';
 import { parseRequest, objectToURLSearchParams } from '../modules/utils.js';
-import buildButtons from '../modules/buildButtons.js';
-import buildInputs from '../modules/buildInputs.js';
 import getTargetFrame from '../modules/getTargetFrame.js';
 
 export default async (req) => {
@@ -55,15 +53,27 @@ const respondWithFrame = async (targetFrame, frameMessage) => {
     
     const host = process.env.URL;
     const frameContent = {
+        version: "vNext",
         image: targetFrame.image ? 
             `${host}/${targetFrame.image}` : 
             `${host}/og-image?${objectToURLSearchParams(searchParams)}` || '',
-        buttons: targetFrame.buttons ? buildButtons(targetFrame.buttons) : '',
-        inputs: targetFrame.inputs ? buildInputs(targetFrame.inputs) : '',
-        postURL: `${host}/?frame=${targetFrame.name}`
+        buttons: targetFrame.buttons,
+        inputText: targetFrame.inputText,
+        postUrl: `${host}/?frame=${targetFrame.name}`
     };
+
+    const landingPageOptions = await landingPage(frameContent);
+    const frameHtmlOptions: GetFrameHtmlOptions = {
+        og: {
+            title: '🔳 Simplest Frame',
+        },
+        title: '🔳 Simplest Frame',
+        htmlBody: landingPageOptions.body,
+        htmlHead: landingPageOptions.head
+    }
+    const frameHTML = getFrameHtml(frameContent, frameHtmlOptions)
     
-    return new Response(await landingPage(frameContent), 
+    return new Response(frameHTML, 
         {
             status: 200,
             headers: { 

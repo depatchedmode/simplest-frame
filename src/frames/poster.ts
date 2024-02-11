@@ -8,7 +8,8 @@ export default {
         },
         {
             label: '{😺} View on Github',
-            url: 'https://github.com/depatchedmode/simplest-frame'
+            action: 'link',
+            target: 'https://github.com/depatchedmode/simplest-frame'
         }
     ]
 };

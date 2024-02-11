@@ -4,7 +4,8 @@ export default {
     buttons: [
         {
             label: '👩‍🎤 View original cast',
-            url: `${process.env.STOLEN_REDIRECT_URL}`
+            action: 'link',
+            target: `${process.env.STOLEN_REDIRECT_URL}`
         }
     ]
 };

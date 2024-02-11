@@ -35,12 +35,7 @@ const build = async (frameMessage) => {
     return mainLayout(frameMessage, frameHTML);
 }
 
-export const inputs = [
-    {
-        type: 'text',
-        content: 'Enter a taunt...',
-    }
-]
+export const inputText = "Enter a taunt...";
 
 export const buttons = [
     { 
@@ -57,5 +52,5 @@ export default {
     name: 'count',
     build,
     buttons,
-    inputs
+    inputText
 };
