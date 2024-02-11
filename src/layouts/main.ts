@@ -26,7 +26,6 @@ export default (payload, frameHTML) => {
                     align-items: center;
                     justify-content: center;
                     line-height: 1;
-                    border: 2em solid #232323;
                 }
             </style>
         </head>
