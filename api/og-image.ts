@@ -8,8 +8,8 @@ import { URLSearchParamsToObject } from '../modules/utils.js';
 export default async (req) => {
     const url = new URL(req.url);
     const params = URLSearchParamsToObject(url.searchParams);
-    const targetFrame = frames[params['targetFrameName']];
-    const markup = await targetFrame.build(params['frameMessage']);
+    const targetFrame = frames[params['frame']];
+    const markup = await targetFrame.build(params['message']);
 
     const svg = await satori(
         html(markup), 

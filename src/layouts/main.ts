@@ -1,4 +1,9 @@
-export default (payload, frameHTML) => {
+import { FrameActionDataParsed } from "frames.js";
+
+export default (
+    frameMessage: FrameActionDataParsed, 
+    frameHTML: string
+) => {
     const html = String.raw;
     const markup = html`
         <html>

@@ -1,6 +1,7 @@
 export default {
     name: 'stolen',
     image: `/images/stolen.png`,
+    onClick: null,
     buttons: [
         {
             label: '👩‍🎤 View original cast',

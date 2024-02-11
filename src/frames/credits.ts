@@ -1,10 +1,16 @@
+import { FrameActionDataParsed } from "frames.js";
+
 export default {
     name: 'credits',
     image: `/images/credits.png`,
+    onClick: (message: FrameActionDataParsed) => {
+        if (message.buttonIndex == 1) {
+            return `count`
+        }
+    },
     buttons: [
         { 
             label: '⬅️ Back',
-            goTo: 'count',
         },
         {
             label: '{😺} View on Github',

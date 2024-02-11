@@ -8,10 +8,11 @@ const getCount = async() => {
     return count;
 }
 
-const incrementCount = async(currentCount) => {
+const incrementCount = async() => {
     const store = getStore('gameState');
-    const newCount = currentCount+1;
-    await store.set('count', newCount);
+    const rawCount = await store.get('count');
+    const newCount = parseInt(rawCount)+1;
+    await store.set('count', newCount.toString());
     return newCount;
 }
 

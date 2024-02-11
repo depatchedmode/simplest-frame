@@ -1,24 +1,32 @@
 import mainLayout from '../layouts/main.js';
 import { getFramer, setFramer } from '../data/framer.js';
 import { getCount, incrementCount } from '../data/count.js';
+import { FrameActionDataParsed } from 'frames.js';
 
-const build = async (frameMessage) => {
-    let count = await getCount();
-    
-    if (frameMessage.from == 'count') {
-        count = await incrementCount(count);
-        const tauntInput = frameMessage.inputText;
-        await setFramer(frameMessage.requesterFid, tauntInput);
+const onClick = async (frameMessage: FrameActionDataParsed) => {
+    switch (frameMessage.buttonIndex) {
+        case 2:
+            return `credits`;
+        default: 
+            await incrementCount();
+            await setFramer(frameMessage.requesterFid, frameMessage.inputText);
+            return `count`;
     }
+}
 
+export const inputText = "Enter a taunt...";
+export const buttons = [
+    { 
+        label: '🫵 Frame me!',
+    },
+    { 
+        label: '🎬 View credits',
+    }
+];
+
+const build = async (frameMessage: FrameActionDataParsed) => {
+    const count = await getCount();
     const { username, taunt } = await getFramer() || {};
-
-    const tauntOutput = taunt ? `
-        <div style="font-size: 2em; line-height: 1.3; color: #cacaca; margin-top: 1em; padding: 0 2rem; text-align: center;">
-            "${taunt}"
-        </div>
-        ` : '';
-
     const html = String.raw;
     const frameHTML = html`
         <fc-frame>
@@ -28,29 +36,21 @@ const build = async (frameMessage) => {
             <div style="font-size: 2em; margin-top: 1em">
                 last framed by @${username || ''}
             </div>
-            ${tauntOutput}
+            ${ taunt ? `
+                <div style="font-size: 2em; line-height: 1.3; color: #cacaca; margin-top: 1em; padding: 0 2rem; text-align: center;">
+                    "${taunt}"
+                </div>
+            ` : '' }
         </fc-frame>
     `;
 
     return mainLayout(frameMessage, frameHTML);
 }
 
-export const inputText = "Enter a taunt...";
-
-export const buttons = [
-    { 
-        label: '🫵 Frame me!',
-        goTo: 'count',
-    },
-    { 
-        label: '🎬 View credits',
-        goTo: 'credits',
-    }
-]
-
 export default {
     name: 'count',
     build,
     buttons,
-    inputText
+    inputText,
+    onClick
 };
