@@ -1,6 +1,12 @@
-export default (payload, frameHTML) => {
+import { FrameActionDataParsed } from "frames.js";
+
+export default (
+  frameHTML: string,
+  frameMessage: FrameActionDataParsed
+) => {
     const html = String.raw;
     const markup = html`
+        <!doctype html>
         <html>
         <head>
             <style>

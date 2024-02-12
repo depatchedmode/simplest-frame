@@ -1,10 +1,15 @@
+const html = String.raw;
+
 export default {
-    name: 'stolen',
-    image: `/images/stolen.png`,
-    buttons: [
-        {
-            label: '👩‍🎤 View original cast',
-            url: `${process.env.STOLEN_REDIRECT_URL}`
-        }
-    ]
+    name: 'poster',
+    logic: () => null,
+    content: () => html`
+        <frame-image src="/images/poster-animated.gif" />
+        <frame-button>
+            🔳 Try Demo
+        </frame-button>
+        <frame-button action="link" target="${process.env.STOLEN_REDIRECT_URL}">
+            👩‍🎤 View original cast
+        </frame-button>
+    `
 };

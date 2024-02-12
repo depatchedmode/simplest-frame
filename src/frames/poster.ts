@@ -1,14 +1,20 @@
+import { FrameActionDataParsed } from "frames.js";
+const html = String.raw;
+
 export default {
     name: 'poster',
-    image: `/images/poster-animated.gif`,
-    buttons: [
-        { 
-            label: '🔳 Try Demo',
-            goTo: 'count',
-        },
-        {
-            label: '{😺} View on Github',
-            url: 'https://github.com/depatchedmode/simplest-frame'
+    logic: (message: FrameActionDataParsed) => {
+        if (message.buttonIndex == 1) {
+            return `count`
         }
-    ]
+    },
+    content: () => html`
+        <frame-image src="/images/poster-animated.gif" />
+        <frame-button>
+            🔳 Try Demo
+        </frame-button>
+        <frame-button action="link" target="https://github.com/depatchedmode/simplest-frame">
+            {😺} View on Github
+        </frame-button>
+    `
 };
