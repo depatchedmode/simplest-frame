@@ -3,6 +3,7 @@ import { Frame, FrameActionDataParsed, GetFrameHtmlOptions, getFrameHtml } from 
 import landingPage from '../src/landing-page.js';
 import { objectToURLSearchParams } from '../modules/utils.js';
 import { isFrameStolen } from './antitheft.js';
+import htmlToSimpleFrame from './htmlToSimpleFrame.js';
 
 /**
  * Determines the next frame to display based on the context and message of the current frame.
@@ -15,19 +16,20 @@ export default async (frameContext, frameMessage: FrameActionDataParsed) => {
   let nextFrameName = 'poster';
   const prevFrame = frames[frameContext.from];
 
-  if (prevFrame && typeof prevFrame.onClick === 'function') {
-    nextFrameName = await prevFrame.onClick(frameMessage);
+  if (prevFrame && typeof prevFrame.logic === 'function') {
+    nextFrameName = await prevFrame.logic(frameMessage);
   }
 
   if (await isFrameStolen(frameMessage)) {
     nextFrameName = 'stolen';
   }
 
-  const nextFrame = frames[nextFrameName];
+  const nextFrameMarkup = await frames[nextFrameName].content(frameMessage);
+  const simpleFrame = htmlToSimpleFrame(nextFrameMarkup);
 
   // TODO: not yet handling redirects
-  if (nextFrame) {
-    return await respondWithFrame(nextFrame, frameMessage);
+  if (simpleFrame) {
+    return await respondWithFrame(nextFrameName, simpleFrame, frameMessage);
   } else {
     console.error(`Unknown frame requested: ${nextFrameName}`);
   }
@@ -54,23 +56,24 @@ export default async (frameContext, frameMessage: FrameActionDataParsed) => {
  * @returns A promise that resolves to a Response object containing the HTML for the frame.
  */
 const respondWithFrame = async (
+  name,
   simpleFrame, 
   message: FrameActionDataParsed
 ) => {
   const searchParams = {
     t: new Date().valueOf(), // Current timestamp for cache busting.
-    frame: simpleFrame.name || '', 
+    frameName: name || '', 
     message
   };
   const host = process.env.URL;
   const frame: Frame = {
     version: "vNext", 
-    image: simpleFrame.image
-      ? `${host}/${simpleFrame.image}` 
+    image: simpleFrame.imageSrc
+      ? `${host}/${simpleFrame.imageSrc}` 
       : `${host}/og-image?${objectToURLSearchParams(searchParams)}` || '', 
     buttons: simpleFrame.buttons, 
     inputText: simpleFrame.inputText, 
-    postUrl: `${host}/?frame=${simpleFrame.name}` 
+    postUrl: `${host}/?frame=${name}` 
   };
 
   const index = await landingPage(frame);

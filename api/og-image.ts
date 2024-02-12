@@ -3,16 +3,19 @@ import sharp from "sharp";
 import { html } from "satori-html";
 import fonts from "../src/fonts.js";
 import frames from "../src/frames/index.js";
+import mainLayout from "../src/layouts/main.js";
 import { URLSearchParamsToObject } from '../modules/utils.js';
 
 export default async (req) => {
     const url = new URL(req.url);
     const params = URLSearchParamsToObject(url.searchParams);
-    const targetFrame = frames[params['frame']];
-    const markup = await targetFrame.build(params['message']);
+    const { message, frameName } = params;
+    const targetFrame = frames[frameName];
+    const frameMarkup = await targetFrame.content(message);
+    const frameMarkupInLayout = mainLayout(frameMarkup, message)
 
     const svg = await satori(
-        html(markup), 
+        html(frameMarkupInLayout), 
         {
             width: 1200,
             height: 630,

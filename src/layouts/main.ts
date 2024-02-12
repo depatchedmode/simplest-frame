@@ -1,11 +1,12 @@
 import { FrameActionDataParsed } from "frames.js";
 
 export default (
-    frameMessage: FrameActionDataParsed, 
-    frameHTML: string
+  frameHTML: string,
+  frameMessage: FrameActionDataParsed
 ) => {
     const html = String.raw;
     const markup = html`
+        <!doctype html>
         <html>
         <head>
             <style>
