@@ -11,7 +11,7 @@ export default async (req) => {
         }) : {} as FrameActionDataParsed;
 
         const frameContext = {
-            from: requestURL.searchParams.get('frame'),
+            searchParams: requestURL.searchParams,
             requestURL: payload?.untrustedData.url,
         }
         
