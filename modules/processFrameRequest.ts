@@ -14,10 +14,10 @@ import htmlToSimpleFrame from './htmlToSimpleFrame.js';
  */
 export default async (frameContext, frameMessage: FrameActionDataParsed) => {
   let nextFrameName = 'poster';
-  const prevFrame = frames[frameContext.from];
+  const prevFrame = frames[frameContext.searchParams?.get('frame')];
 
   if (prevFrame && typeof prevFrame.logic === 'function') {
-    nextFrameName = await prevFrame.logic(frameMessage);
+    nextFrameName = await prevFrame.logic(frameMessage, frameContext);
   }
 
   if (await isFrameStolen(frameMessage)) {
@@ -60,20 +60,15 @@ const respondWithFrame = async (
   simpleFrame, 
   message: FrameActionDataParsed
 ) => {
-  const searchParams = {
-    t: new Date().valueOf(), // Current timestamp for cache busting.
-    frameName: name || '', 
-    message
-  };
+  const postVars = new URLSearchParams(simpleFrame.postVars);
+  postVars.set('frame', name);
   const host = process.env.URL;
   const frame: Frame = {
-    version: "vNext", 
-    image: simpleFrame.imageSrc
-      ? `${host}/${simpleFrame.imageSrc}` 
-      : `${host}/og-image?${objectToURLSearchParams(searchParams)}` || '', 
+    version: 'vNext', 
+    image: handleImageSource(name, simpleFrame, message),
     buttons: simpleFrame.buttons, 
     inputText: simpleFrame.inputText, 
-    postUrl: `${host}/?frame=${name}` 
+    postUrl: `${host}/?${postVars}`
   };
 
   const index = await landingPage(frame);
@@ -96,3 +91,28 @@ const respondWithFrame = async (
     }
   );
 };
+
+function handleImageSource(name, simpleFrame, message):string {
+  const dataUriPattern = /^data:image\/[a-zA-Z]+;base64,/;
+  const absoluteUrlPattern = /^https?:\/\//;
+  const host = process.env.URL;
+  const { imageSrc } = simpleFrame;
+
+  if (dataUriPattern.test(imageSrc)) {
+    return `${host}/og-image?${objectToURLSearchParams({
+      dataUri: imageSrc,
+    })}`;
+  } else if (absoluteUrlPattern.test(imageSrc)) {
+    return `${host}/og-image?${objectToURLSearchParams({
+      externalImageUrl: imageSrc,
+    })}`;
+  } else if (imageSrc) {
+    return `${host}/${imageSrc}`
+  } else {
+    return `${host}/og-image?${objectToURLSearchParams({
+      t: new Date().valueOf(), // Current timestamp for cache busting.
+      frameName: name || '', 
+      message
+    })}`;
+  }
+}
