@@ -44,7 +44,7 @@ https://warpcast.com/depatchedmode/0xecad681e
 1. Run `netlify dev --live` will give [proxy your local machine](https://docs.netlify.com/cli/local-development/#share-a-live-development-server) to the *world* *wide* *web*.
 2. Test that link in either:
     + The Warpcast Embed UI: https://warpcast.com/~/developers/embeds
-    + The Frams.js hosted debugger: https://debugger.framesjs.org/debug
+    + The Frames.js hosted debugger: https://debugger.framesjs.org/debug
 
 #### Local & reliable:
 
