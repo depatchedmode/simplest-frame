@@ -1,18 +1,19 @@
 {
   "name": "simplest-frame",
   "type": "module",
-  "version": "0.8.5",
+  "version": "0.9.0",
   "dependencies": {
     "@netlify/blobs": "^6.4.2",
     "cheerio": "^1.0.0-rc.12",
     "dompurify": "^3.0.8",
-    "frames.js": "0.5.2",
+    "frames.js": "0.9.6",
     "jsdom": "^24.0.0",
     "satori": "^0.10.13",
     "satori-html": "^0.3.2",
     "sharp": "^0.32.6"
   },
   "devDependencies": {
+    "@frames.js/debugger": "^0.1.16",
     "@types/node": "^20.11.17",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
