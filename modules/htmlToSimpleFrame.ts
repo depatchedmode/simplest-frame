@@ -10,7 +10,7 @@ export default (html:string) => {
   const buttons = $('frame-button').map((i, el) => {
     return {
       label: $(el).text().trim(),
-      action: $(el).attr('action') || null,
+      action: $(el).attr('action') || 'post',
       target: $(el).attr('target') || null
     };
   }).get(); // .get() is used to convert cheerio object into a plain array
