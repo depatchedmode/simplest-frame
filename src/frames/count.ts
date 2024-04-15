@@ -34,7 +34,7 @@ export default {
                             </div>
                         ` : '' }
                     </div>`,
-            inputText: '',
+            inputText: 'taunt',
             buttons: [
                 {
                     action: 'post',
