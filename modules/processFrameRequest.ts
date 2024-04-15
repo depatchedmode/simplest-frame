@@ -3,7 +3,6 @@ import { Frame, FrameActionDataParsed, GetFrameHtmlOptions, getFrameHtml } from 
 import landingPage from '../src/landing-page.js';
 import { objectToURLSearchParams } from '../modules/utils.js';
 import { isFrameStolen } from './antitheft.js';
-import htmlToSimpleFrame from './htmlToSimpleFrame.js';
 
 /**
  * Determines the next frame to display based on the context and message of the current frame.
@@ -13,7 +12,6 @@ import htmlToSimpleFrame from './htmlToSimpleFrame.js';
  * @returns A promise that resolves to the response for displaying the next frame.
  */
 export default async (frameContext, frameMessage: FrameActionDataParsed) => {
-  console.log(frameContext);
   let nextFrameName = 'poster';
   const prevFrame = frames[frameContext.searchParams?.get('frame')];
 
@@ -25,12 +23,11 @@ export default async (frameContext, frameMessage: FrameActionDataParsed) => {
     nextFrameName = 'stolen';
   }
 
-  const nextFrameMarkup = await frames[nextFrameName].render(frameMessage);
-  const simpleFrame = htmlToSimpleFrame(nextFrameMarkup);
+  const nextFrame = await frames[nextFrameName].render(frameMessage);
 
   // TODO: not yet handling redirects
-  if (simpleFrame) {
-    return await respondWithFrame(nextFrameName, simpleFrame, frameMessage);
+  if (nextFrame) {
+    return await respondWithFrame(nextFrameName, nextFrame, frameMessage);
   } else {
     console.error(`Unknown frame requested: ${nextFrameName}`);
   }
@@ -61,15 +58,15 @@ const respondWithFrame = async (
   simpleFrame, 
   message: FrameActionDataParsed
 ) => {
-  const postVars = new URLSearchParams(simpleFrame.postVars);
+  const postVars = new URLSearchParams();
   postVars.set('frame', name);
   const host = process.env.URL;
   const frame: Frame = {
     version: 'vNext', 
     image: handleImageSource(name, simpleFrame, message),
     buttons: simpleFrame.buttons, 
-    inputText: simpleFrame.inputText, 
-    postUrl: `${host}/?${postVars}`
+    inputText: simpleFrame.inputText,
+    postUrl: `${host}/?${postVars.toString()}`
   };
 
   const index = await landingPage(frame);
@@ -93,22 +90,21 @@ const respondWithFrame = async (
   );
 };
 
-function handleImageSource(name, simpleFrame, message):string {
+function handleImageSource(name, frame, message):string {
   const dataUriPattern = /^data:image\/[a-zA-Z]+;base64,/;
   const absoluteUrlPattern = /^https?:\/\//;
   const host = process.env.URL;
-  const { imageSrc } = simpleFrame;
 
-  if (dataUriPattern.test(imageSrc)) {
+  const { image } = frame;
+
+  if (dataUriPattern.test(image)) {
     return `${host}/og-image?${objectToURLSearchParams({
-      dataUri: imageSrc,
+      dataUri: image,
     })}`;
-  } else if (absoluteUrlPattern.test(imageSrc)) {
+  } else if (absoluteUrlPattern.test(image)) {
     return `${host}/og-image?${objectToURLSearchParams({
-      externalImageUrl: imageSrc,
+      imageUrl: image,
     })}`;
-  } else if (imageSrc) {
-    return `${host}/${imageSrc}`
   } else {
     return `${host}/og-image?${objectToURLSearchParams({
       t: new Date().valueOf(), // Current timestamp for cache busting.

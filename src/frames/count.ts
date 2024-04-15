@@ -8,50 +8,53 @@ export default {
     render: async () => {
         const count = await getCount();
         const { username, taunt } = await getFramer() || {};
-        return html`
-            <frame-image layout="main">
-                <div style="
-                    font-family: 'Redaction';
-                    display: flex;
-                    flex-direction: column;
-                    width: 100vw;
-                    height: 100vh;
-                    color: white;
-                    background: black;
-                    align-items: center;
-                    justify-content: center;
-                    line-height: 1;
-                ">
-                    <div style="display: flex; gap: 1rem; font-size: 5em;">
-                        i've been framed <span style="font-family:'Redaction-100'">${count || 0}</span> times
-                    </div>
-                    <div style="font-size: 2em; margin-top: 1em">
-                        last framed by @${username || ''}
-                    </div>
-                    ${ taunt ? `
-                        <div style="font-size: 2em; line-height: 1.3; color: #cacaca; margin-top: 1em; padding: 0 2rem; text-align: center;">
-                            "${taunt}"
+        return {
+            image:  html`
+                    <div style="
+                        font-family: 'Redaction';
+                        display: flex;
+                        flex-direction: column;
+                        width: 100vw;
+                        height: 100vh;
+                        color: white;
+                        background: black;
+                        align-items: center;
+                        justify-content: center;
+                        line-height: 1;
+                    ">
+                        <div style="display: flex; gap: 1rem; font-size: 5em;">
+                            i've been framed <span style="font-family:'Redaction-100'">${count || 0}</span> times
                         </div>
-                    ` : '' }
-                </div>
-            </frame-image>
-            <frame-input text="text" />
-            <frame-button action="post">
-                🫵 Frame me!
-            </frame-button>
-            <frame-button action="post">
-                🎬 View credits
-            </frame-button>
-        `;
+                        <div style="font-size: 2em; margin-top: 1em">
+                            last framed by @${username || ''}
+                        </div>
+                        ${ taunt ? `
+                            <div style="font-size: 2em; line-height: 1.3; color: #cacaca; margin-top: 1em; padding: 0 2rem; text-align: center;">
+                                "${taunt}"
+                            </div>
+                        ` : '' }
+                    </div>`,
+            inputText: '',
+            buttons: [
+                {
+                    action: 'post',
+                    label: '🫵 Frame me!'
+                },
+                {
+                    action: 'post',
+                    label: '🎬 View credits'
+                }
+            ]
+        } 
     },
     handleInteraction: async (msg: FrameActionDataParsed) => {
         switch (msg.buttonIndex) {
-            case 2:
-                return `credits`;
-            default: 
+            case 1:
                 await incrementCount();
                 await setFramer(msg.requesterFid, msg.inputText);
                 return `count`;
+            case 2:
+                return `credits`;
         }
     },
 }

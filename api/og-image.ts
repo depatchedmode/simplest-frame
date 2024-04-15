@@ -7,9 +7,10 @@ import mainLayout from "../src/layouts/main.js";
 import { URLSearchParamsToObject } from '../modules/utils.js';
 
 export default async (req) => {
+  
   const url = new URL(req.url);
   const params = URLSearchParamsToObject(url.searchParams);
-  const { message, frameName, dataUri, externalImageUrl } = params;
+  const { message, frameName, dataUri, imageUrl } = params;
 
   let responseBuffer;
 
@@ -18,16 +19,16 @@ export default async (req) => {
     const base64Data = dataUri.split(',')[1];
     responseBuffer = Buffer.from(base64Data, 'base64');
   }
-  // Case 2: Proxy an externally loaded image
-  else if (externalImageUrl) {
+  // Case 2: Proxy an image
+  else if (imageUrl) {
     // Fetch and process the external image
-    responseBuffer = await fetchExternalImage(externalImageUrl);
+    responseBuffer = await fetchExternalImage(imageUrl);
   }
   // Default case: Generate image based on frame name and message
   else if (frameName && message) {
     const targetFrame = frames[frameName];
-    const frameMarkup = await targetFrame.render(message);
-    const frameMarkupInLayout = mainLayout(frameMarkup, message)
+    const frame = await targetFrame.render(message);
+    const frameMarkupInLayout = mainLayout(frame.image, message)
 
     const svg = await satori(
       html(frameMarkupInLayout), 
