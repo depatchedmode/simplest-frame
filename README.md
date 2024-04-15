@@ -62,9 +62,3 @@ https://github.com/depatchedmode/simplest-frame/issues/3
 I am a designer larping as a dev. I invite your collaboration and feedback. Please be kind.
 
 And please! Can we make it simpler?
-
-### Roadmap
-
-1. Less bad
-2. More better
-3. Migration to the [everywhere.computer](https://everywhere.computer)
