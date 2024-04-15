@@ -51,20 +51,20 @@ const removeBoundCast = (castHash) => removeFromList(getBoundCasts, setBoundCast
 // 2. The castHash is in boundCasts.
 // 3. Both boundCasts & boundAccounts are empty.
 const isFrameStolen = async (frameMessage) => {
-    const { castId, requestURL } = frameMessage;
-    if (!castId || !requestURL) {
+    const { castId } = frameMessage;
+    if (!castId) {
         return false;
     }
 
     const { fid: castAuthorID, hash: castHash } = castId;
     const boundCasts = await getBoundCasts();
     const boundAccounts = await getBoundAccounts();
+    
 
     const isAuthorAllowed = boundAccounts.includes(castAuthorID) || boundAccounts.length === 0;
     const isCastAllowed = boundCasts.includes(castHash) || boundCasts.length === 0;
-    const isFirstParty = requestURL ? requestURL.indexOf(process.env.URL) > -1 : true;
 
-    const isStolen = !isFirstParty || !isAuthorAllowed || !isCastAllowed;
+    const isStolen = !isAuthorAllowed || !isCastAllowed;
 
     // record the theft
     if (isStolen) {
