@@ -13,18 +13,19 @@ import htmlToSimpleFrame from './htmlToSimpleFrame.js';
  * @returns A promise that resolves to the response for displaying the next frame.
  */
 export default async (frameContext, frameMessage: FrameActionDataParsed) => {
+  console.log(frameContext);
   let nextFrameName = 'poster';
   const prevFrame = frames[frameContext.searchParams?.get('frame')];
 
-  if (prevFrame && typeof prevFrame.logic === 'function') {
-    nextFrameName = await prevFrame.logic(frameMessage, frameContext);
+  if (prevFrame && typeof prevFrame.handleInteraction === 'function') {
+    nextFrameName = await prevFrame.handleInteraction(frameMessage, frameContext);
   }
 
   if (await isFrameStolen(frameMessage)) {
     nextFrameName = 'stolen';
   }
 
-  const nextFrameMarkup = await frames[nextFrameName].content(frameMessage);
+  const nextFrameMarkup = await frames[nextFrameName].render(frameMessage);
   const simpleFrame = htmlToSimpleFrame(nextFrameMarkup);
 
   // TODO: not yet handling redirects

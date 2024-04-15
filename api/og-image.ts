@@ -26,7 +26,7 @@ export default async (req) => {
   // Default case: Generate image based on frame name and message
   else if (frameName && message) {
     const targetFrame = frames[frameName];
-    const frameMarkup = await targetFrame.content(message);
+    const frameMarkup = await targetFrame.render(message);
     const frameMarkupInLayout = mainLayout(frameMarkup, message)
 
     const svg = await satori(

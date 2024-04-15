@@ -5,17 +5,7 @@ const html = String.raw;
 
 export default {
     name: 'count',
-    logic: async (frameMessage: FrameActionDataParsed) => {
-        switch (frameMessage.buttonIndex) {
-            case 2:
-                return `credits`;
-            default: 
-                await incrementCount();
-                await setFramer(frameMessage.requesterFid, frameMessage.inputText);
-                return `count`;
-        }
-    },
-    content: async () => {
+    render: async () => {
         const count = await getCount();
         const { username, taunt } = await getFramer() || {};
         return html`
@@ -46,12 +36,22 @@ export default {
                 </div>
             </frame-image>
             <frame-input text="text" />
-            <frame-button>
+            <frame-button action="post">
                 🫵 Frame me!
             </frame-button>
-            <frame-button>
+            <frame-button action="post">
                 🎬 View credits
             </frame-button>
         `;
+    },
+    handleInteraction: async (msg: FrameActionDataParsed) => {
+        switch (msg.buttonIndex) {
+            case 2:
+                return `credits`;
+            default: 
+                await incrementCount();
+                await setFramer(msg.requesterFid, msg.inputText);
+                return `count`;
+        }
     },
 }

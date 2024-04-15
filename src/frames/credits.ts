@@ -3,12 +3,7 @@ const html = String.raw;
 
 export default {
     name: 'credits',
-    logic: (message: FrameActionDataParsed) => {
-        if (message.buttonIndex == 1) {
-            return `count`
-        }
-    },
-    content: () => html`
+    render: () => html`
         <frame-image src="/images/credits.png" />
         <frame-button>
             ⬅️ Back
@@ -16,5 +11,10 @@ export default {
         <frame-button action="link" target="https://github.com/depatchedmode/simplest-frame">
             {😺} View on Github
         </frame-button>
-    `
+    `,
+    handleInteraction: (message: FrameActionDataParsed) => {
+        if (message.buttonIndex == 1) {
+            return `count`
+        }
+    },
 };
