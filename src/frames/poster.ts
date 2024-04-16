@@ -8,19 +8,25 @@ export default {
             buttons: [
                 {
                     action: 'post',
-                    label: '🔳 Try Demo'
+                    label: '🔳 State Demo'
+                },
+                {
+                    action: 'post',
+                    label: '🔳 Mint Demo'
                 },
                 {
                     action: 'link',
                     target: 'https://github.com/depatchedmode/simplest-frame',
-                    label: '{😺} View on Github'
+                    label: 'Github'
                 }
             ]
         }
     },
-    handleInteraction: (message: FrameActionDataParsed) => {
-        if (message.buttonIndex == 1) {
+    handleInteraction: (msg: FrameActionDataParsed) => {
+        if (msg.buttonIndex == 1) {
             return `count`
+        } else if (msg.buttonIndex == 2) {
+            return `mint`
         }
     },
 };
