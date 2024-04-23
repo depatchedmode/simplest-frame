@@ -8,11 +8,15 @@ export default {
             buttons: [
                 {
                     action: 'post',
-                    label: '🔳 State Demo'
+                    label: '🔳 State'
                 },
                 {
                     action: 'post',
-                    label: '🔳 Mint Demo'
+                    label: '🔳 Tx'
+                },
+                {
+                    action: 'post',
+                    label: '🔳 Mint'
                 },
                 {
                     action: 'link',
@@ -23,10 +27,13 @@ export default {
         }
     },
     handleInteraction: (msg: FrameActionDataParsed) => {
-        if (msg.buttonIndex == 1) {
-            return `count`
-        } else if (msg.buttonIndex == 2) {
-            return `mint`
+        switch (msg.buttonIndex) {
+            case 1:
+                return `count`;
+            case 2:
+                return `transaction`;
+            case 3:
+                return `mint`;
         }
     },
 };

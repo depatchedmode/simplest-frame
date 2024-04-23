@@ -1,11 +1,11 @@
 {
   "name": "simplest-frame",
   "type": "module",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "dependencies": {
     "@netlify/blobs": "^6.4.2",
     "dompurify": "^3.0.8",
-    "frames.js": "0.13.0",
+    "frames.js": "0.14.0",
     "jsdom": "^24.0.0",
     "satori": "^0.10.13",
     "satori-html": "^0.3.2",
