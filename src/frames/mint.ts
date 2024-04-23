@@ -6,7 +6,7 @@ export default {
     name: 'mint',
     render: async () => {
         return {
-            image: `${process.env.URL}/images/poster-animated.gif`,
+            imageURL: 'images/poster-animated.gif',
             buttons: [
                 {
                     action: 'post',

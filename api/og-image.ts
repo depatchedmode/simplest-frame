@@ -10,25 +10,14 @@ export default async (req) => {
   
   const url = new URL(req.url);
   const params = URLSearchParamsToObject(url.searchParams);
-  const { message, frameName, dataUri, imageUrl } = params;
+  const { message, frameName } = params;
 
-  let responseBuffer;
+  let imageBase64;
 
-  // Case 1: Handle data URI
-  if (dataUri) {
-    const base64Data = dataUri.split(',')[1];
-    responseBuffer = Buffer.from(base64Data, 'base64');
-  }
-  // Case 2: Proxy an image
-  else if (imageUrl) {
-    // Fetch and process the external image
-    responseBuffer = await fetchExternalImage(imageUrl);
-  }
-  // Default case: Generate image based on frame name and message
-  else if (frameName && message) {
+  if (frameName && message) {
     const targetFrame = frames[frameName];
     const frame = await targetFrame.render(message);
-    const frameMarkupInLayout = mainLayout(frame.image, message)
+    const frameMarkupInLayout = mainLayout(frame.imageMarkup, message)
 
     const svg = await satori(
       html(frameMarkupInLayout), 
@@ -39,18 +28,19 @@ export default async (req) => {
       }
     );
     const svgBuffer = Buffer.from(svg);
-    const png = sharp(svgBuffer).png();
-    responseBuffer = await png.toBuffer();
+    const imgOutput = sharp(svgBuffer).webp();
+    const imageBuffer = await imgOutput.toBuffer();
+    imageBase64 = `data:image/png;base64,${imageBuffer.toString('base64')}`;
   } else {
     throw new Error("Insufficient parameters provided for image generation.");
   }
 
-  return new Response(responseBuffer,
+  return new Response(imageBase64,
     {
       status: 200,
       headers: {
-        'Content-Type': 'image/png',
-        'Cache-Control': 'public, max-age=31536000'
+        'Content-Type': 'text/plain',
+        'Netlify-Vary': 'query',
       }
     }
   );
@@ -72,7 +62,6 @@ const fetchExternalImage = async (imageUrl) => {
     return null;
   }
 };
-
 
 export const config = {
   path: "/og-image"

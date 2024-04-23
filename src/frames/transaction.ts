@@ -5,7 +5,7 @@ export default {
     name: 'transaction',
     render: async () => {
         return {
-            image: html`
+            imageMarkup: html`
             <div style="
                 font-family: 'Redaction';
                 display: flex;

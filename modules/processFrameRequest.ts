@@ -63,7 +63,7 @@ const respondWithFrame = async (
   const host = process.env.URL;
   const frame: Frame = {
     version: 'vNext', 
-    image: handleImageSource(name, simpleFrame, message),
+    image: await handleImageSource(name, simpleFrame, message),
     buttons: simpleFrame.buttons, 
     inputText: simpleFrame.inputText,
     postUrl: `${host}/?${postVars.toString()}`
@@ -90,26 +90,40 @@ const respondWithFrame = async (
   );
 };
 
-function handleImageSource(name, frame, message):string {
+async function handleImageSource(name, frame, message):string {
   const dataUriPattern = /^data:image\/[a-zA-Z]+;base64,/;
   const absoluteUrlPattern = /^https?:\/\//;
   const host = process.env.URL;
 
-  const { image } = frame;
+  const { imageURL, imageMarkup } = frame;
 
-  if (dataUriPattern.test(image)) {
-    return `${host}/og-image?${objectToURLSearchParams({
-      dataUri: image,
-    })}`;
-  } else if (absoluteUrlPattern.test(image)) {
-    return `${host}/og-image?${objectToURLSearchParams({
-      imageUrl: image,
-    })}`;
-  } else {
-    return `${host}/og-image?${objectToURLSearchParams({
+  if (imageMarkup) {
+    const queryParams = objectToURLSearchParams({
       t: new Date().valueOf(), // Current timestamp for cache busting.
       frameName: name || '', 
       message
-    })}`;
+    });
+
+    // Fetch the generated image as a data URI from og-image
+    const ogImageResponse = await fetch(`${host}/og-image?${queryParams}`);
+    const dataURI = await ogImageResponse.text(); // Assuming og-image returns the data URI in the response body
+    return dataURI;
+  } 
+
+  // data URI
+  else if (dataUriPattern.test(imageURL)) {
+    return imageURL;
+  }
+
+  // external image: need to proxy it
+  else if (absoluteUrlPattern.test(imageURL)) {
+    const ogImageResponse = await fetch(imageURL);
+    const dataURI = await ogImageResponse.text(); // Assuming og-image returns the data URI in the response body
+    return dataURI;
+  } 
+
+  // local image
+  else {
+    return `${host}/${imageURL}`;
   }
 }
