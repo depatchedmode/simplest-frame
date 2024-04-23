@@ -38,23 +38,23 @@ export default {
             buttons: [
                 {
                     action: 'post',
-                    label: '🫵 Frame me!'
+                    label: '⬅ Back'
                 },
                 {
                     action: 'post',
-                    label: '🎬 View credits'
-                }
+                    label: '🫵 Frame me!'
+                },
             ]
         } 
     },
     handleInteraction: async (msg: FrameActionDataParsed) => {
         switch (msg.buttonIndex) {
             case 1:
+                return `poster`;
+            case 2:
                 await incrementCount();
                 await setFramer(msg.requesterFid, msg.inputText);
                 return `count`;
-            case 2:
-                return `credits`;
         }
     },
 }

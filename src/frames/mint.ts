@@ -10,7 +10,7 @@ export default {
             buttons: [
                 {
                     action: 'post',
-                    label: '⬅️ Back'
+                    label: '⬅ Back'
                 },
                 {
                     action: 'mint',
@@ -21,10 +21,6 @@ export default {
                         tokenId: '1',
                     })
                 },
-                {
-                    action: 'post',
-                    label: '🎬 View credits'
-                }
             ]
         } 
     },
@@ -32,8 +28,8 @@ export default {
         switch (msg.buttonIndex) {
             case 1:
                 return `poster`;
-            case 3:
-                return `credits`;
+            case 2:
+                return `mint`;
         }
     },
 }
