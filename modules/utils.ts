@@ -28,58 +28,6 @@ const parseRequest = async(req) => {
     return data;
 }
 
-const flattenObject = (obj, prefix = '') => {
-    return Object.keys(obj).reduce((acc, k) => {
-        const pre = prefix.length ? `${prefix}[${k}]` : k;
-        if (typeof obj[k] === 'object' && obj[k] !== null) {
-            Object.assign(acc, flattenObject(obj[k], pre));
-        } else {
-            acc[pre] = obj[k];
-        }
-        return acc;
-    }, {});
-}
-
-const objectToURLSearchParams = (obj) => {
-    const flattened = flattenObject(obj);
-    const params = new URLSearchParams();
-    for (const key in flattened) {
-        params.append(key, flattened[key]);
-    }
-    return params;
-}
-
-const URLSearchParamsToObject = (searchParams) => {
-    const obj = {};
-    
-    for (const [key, value] of searchParams.entries()) {
-        // eslint-disable-next-line no-useless-escape
-        const keys = key.split(/[\[\]]/g).filter(k => k);
-        let currentObj = obj;
-        
-        for (let i = 0; i < keys.length - 1; i++) {
-            const k = keys[i];
-            if (!currentObj[k]) {
-                currentObj[k] = isNaN(parseInt(keys[i + 1])) ? {} : [];
-            }
-            currentObj = currentObj[k];
-        }
-
-        const lastKey = keys[keys.length - 1];
-        if (Array.isArray(currentObj)) {
-            if (isNaN(lastKey)) {
-                currentObj.push(value);
-            } else {
-                currentObj[lastKey] = value;
-            }
-        } else {
-            currentObj[lastKey] = value;
-        }
-    }
-    
-    return obj;
-}
-
 const loadFont = async (fileName) => {
     try {
         const filePath = path.join(__dirname, '../public', 'fonts', fileName);
@@ -93,7 +41,5 @@ const loadFont = async (fileName) => {
 export {
     streamToString,
     parseRequest,
-    objectToURLSearchParams,
-    URLSearchParamsToObject,
     loadFont
 }
