@@ -1,7 +1,11 @@
+import satori from "satori";
+import sharp from "sharp";
+import { html } from "satori-html";
+import fonts from "../src/fonts.js";
+import mainLayout from "../src/layouts/main.js";
 import frames from '../src/frames/index.js';
 import { Frame, FrameActionDataParsed, GetFrameHtmlOptions, getFrameHtml } from "frames.js";
 import landingPage from '../src/landing-page.js';
-import { objectToURLSearchParams } from '../modules/utils.js';
 import { isFrameStolen } from './antitheft.js';
 
 /**
@@ -63,7 +67,7 @@ const respondWithFrame = async (
   const host = process.env.URL;
   const frame: Frame = {
     version: 'vNext', 
-    image: handleImageSource(name, simpleFrame, message),
+    image: await handleImageSource(simpleFrame, message),
     buttons: simpleFrame.buttons, 
     inputText: simpleFrame.inputText,
     postUrl: `${host}/?${postVars.toString()}`
@@ -90,26 +94,43 @@ const respondWithFrame = async (
   );
 };
 
-function handleImageSource(name, frame, message):string {
+async function handleImageSource(frame, message):Promise<string> {
   const dataUriPattern = /^data:image\/[a-zA-Z]+;base64,/;
   const absoluteUrlPattern = /^https?:\/\//;
   const host = process.env.URL;
 
-  const { image } = frame;
+  const { imageURL, imageMarkup } = frame;
 
-  if (dataUriPattern.test(image)) {
-    return `${host}/og-image?${objectToURLSearchParams({
-      dataUri: image,
-    })}`;
-  } else if (absoluteUrlPattern.test(image)) {
-    return `${host}/og-image?${objectToURLSearchParams({
-      imageUrl: image,
-    })}`;
-  } else {
-    return `${host}/og-image?${objectToURLSearchParams({
-      t: new Date().valueOf(), // Current timestamp for cache busting.
-      frameName: name || '', 
-      message
-    })}`;
+  if (imageMarkup) {
+    const frameMarkupInLayout = mainLayout(imageMarkup, message)
+    const svg = await satori(
+      html(frameMarkupInLayout), 
+      {
+        width: 1200,
+        height: 630,
+        fonts: fonts,
+      }
+    );
+    const svgBuffer = Buffer.from(svg);
+    const imgOutput = sharp(svgBuffer).webp();
+    const imageBuffer = await imgOutput.toBuffer();
+    return `data:image/png;base64,${imageBuffer.toString('base64')}`;
+  } 
+
+  // data URI
+  else if (dataUriPattern.test(imageURL)) {
+    return imageURL;
+  }
+
+  // external image: need to proxy it
+  else if (absoluteUrlPattern.test(imageURL)) {
+    const ogImageResponse = await fetch(imageURL);
+    const dataURI = await ogImageResponse.text(); // Assuming og-image returns the data URI in the response body
+    return dataURI;
+  } 
+
+  // local image
+  else {
+    return `${host}/${imageURL}`;
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "simplest-frame",
   "type": "module",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "dependencies": {
     "@netlify/blobs": "^6.4.2",
     "dompurify": "^3.0.8",

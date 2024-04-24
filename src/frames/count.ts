@@ -9,7 +9,7 @@ export default {
         const count = await getCount();
         const { username, taunt } = await getFramer() || {};
         return {
-            image:  html`
+            imageMarkup:  html`
                     <div style="
                         font-family: 'Redaction';
                         display: flex;
