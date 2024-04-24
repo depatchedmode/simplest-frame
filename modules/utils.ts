@@ -1,5 +1,3 @@
-import fs from 'fs/promises';
-import path from 'path';
 import { URLSearchParams } from 'url';
 
 const streamToString = async(stream) => {
@@ -28,18 +26,7 @@ const parseRequest = async(req) => {
     return data;
 }
 
-const loadFont = async (fileName) => {
-    try {
-        const filePath = path.join(__dirname, '../public', 'fonts', fileName);
-        const fontData = await fs.readFile(filePath);
-        return fontData;
-    } catch (error) {
-        console.error('Error reading font file:', error);
-    }
-}
-
 export {
     streamToString,
     parseRequest,
-    loadFont
 }
