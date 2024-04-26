@@ -21,7 +21,6 @@ const DEFAULT_STATE = {
  * @returns A promise that resolves to the response for displaying the next frame.
  */
 export default async (prevFrameName: string, frameData: FrameActionDataParsed) => {
-  console.log('processFrameRequest');
   const prevFrame = prevFrameName ? frames[prevFrameName] : null;
 
   let nextState = DEFAULT_STATE;  

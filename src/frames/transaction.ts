@@ -3,7 +3,6 @@ import { FrameActionDataParsed } from 'frames.js';
 export default {
     name: 'transaction',
     render: async (frameData: FrameActionDataParsed) => {
-        console.log('render transaction')
         const state = frameData.state ? JSON.parse(frameData.state) : {};
         const mintQuantity = state.mintQuantity ? state.mintQuantity : 1;
         return {
