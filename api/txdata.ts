@@ -66,9 +66,9 @@ export default async (req) => {
     const mintReferral = '0x76963eE4C482fA4F9E125ea3C9Cc2Ea81fe8e8C6';
 
     const tokenId = 2;
-    const quantity = 3; 
+    const quantity = frameMessage.state ? JSON.parse(frameMessage.state).mintQuantity : 1;
     const mintToAddress = frameMessage.connectedAddress; 
-    const comment = 'Your comment'; 
+    const comment = frameMessage.inputText || ''; 
     
     let minterArguments;
     if (comment.length > 0) {
