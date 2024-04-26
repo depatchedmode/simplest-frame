@@ -13,7 +13,7 @@ export default {
         const fg = bg == 'black' ? 'white' : 'black';
         const { username, taunt } = await getFramer() || {};
         return {
-            imageMarkup:  html`
+            image:  html`
                     <div style="
                         font-family: 'Redaction';
                         display: flex;

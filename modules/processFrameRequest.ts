@@ -57,13 +57,12 @@ const respondWithFrame = async (
   const postVars = new URLSearchParams();
   postVars.set('currFrame', nextFrame.name);
   const renderedFrame = await nextFrame.render(frameData);
-  const host = process.env.URL;
   const frame: Frame = {
     version: 'vNext', 
-    image: await handleImageSource(renderedFrame, frameData),
+    image: await handleImageSource(renderedFrame.image, frameData),
     buttons: renderedFrame.buttons, 
     inputText: renderedFrame.inputText,
-    postUrl: `${host}/?${postVars.toString()}`,
+    postUrl: `${process.env.URL}/?${postVars.toString()}`,
     state: nextFrame.state,
   };
 
@@ -88,15 +87,13 @@ const respondWithFrame = async (
   );
 };
 
-async function handleImageSource(frame, message):Promise<string> {
+async function handleImageSource(image, frameData):Promise<string> {
   const dataUriPattern = /^data:image\/[a-zA-Z]+;base64,/;
   const absoluteUrlPattern = /^https?:\/\//;
-  const host = process.env.URL;
+  const htmlPattern = /(<([^>]+)>)/gi;
 
-  const { imageURL, imageMarkup } = frame;
-
-  if (imageMarkup) {
-    const frameMarkupInLayout = mainLayout(imageMarkup, message)
+  if (htmlPattern.test(image)) {
+    const frameMarkupInLayout = mainLayout(image, frameData)
     const svg = await satori(
       html(frameMarkupInLayout), 
       {
@@ -111,20 +108,13 @@ async function handleImageSource(frame, message):Promise<string> {
     return `data:image/png;base64,${imageBuffer.toString('base64')}`;
   } 
 
-  // data URI
-  else if (dataUriPattern.test(imageURL)) {
-    return imageURL;
+  // data URI or external url
+  else if (dataUriPattern.test(image) || absoluteUrlPattern.test(image)) {
+    return image;
   }
-
-  // external image: need to proxy it
-  else if (absoluteUrlPattern.test(imageURL)) {
-    const ogImageResponse = await fetch(imageURL);
-    const dataURI = await ogImageResponse.text(); // Assuming og-image returns the data URI in the response body
-    return dataURI;
-  } 
 
   // local image
   else {
-    return `${host}/${imageURL}`;
+    return `${process.env.URL}/${image}`;
   }
 }

@@ -2,7 +2,7 @@ export default {
     name: 'stolen',
     render: () => { 
         return {
-            imageURL: 'images/stolen.png',
+            image: 'images/stolen.png',
             buttons: [
                 {
                     action: 'post',

@@ -4,7 +4,7 @@ export default {
     name: 'poster',
     render: () => {
         return {
-            imageURL: 'images/poster-animated.gif',
+            image: 'images/poster-animated.gif',
             buttons: [
                 {
                     action: 'post',

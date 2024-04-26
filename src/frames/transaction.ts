@@ -6,7 +6,7 @@ export default {
         const state = frameData.state ? JSON.parse(frameData.state) : {};
         const mintQuantity = state.mintQuantity ? state.mintQuantity : 1;
         return {
-            imageURL: 'images/simplest-frame-v0-12-0-1155.gif',
+            image: 'https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fmagic.decentralized-content.com%2Fipfs%2Fbafybeiclasbp3c534mmsm75slbbhp26an3iifuk2u3zvjrifh2rgg4umpi&w=1920&q=75',
             buttons: [
                 {
                     action: 'post',
