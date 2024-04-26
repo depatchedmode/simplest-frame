@@ -10,8 +10,8 @@ export default async (req) => {
     }) : {} as FrameActionDataParsed;
     
     // Contract details
-    const CONTRACT_ADDRESS = '0xc6d4848c9f01d649dfba170c65a964940a93dca5'; // Counter.sol on Base    
-    const mintFee = '777000000000000';
+    const CONTRACT_ADDRESS = '0xc6d4848c9f01d649dfba170c65a964940a93dca5';
+    const mintFee = 777000000000000;
     
     const partialZora1155ABI = [
       {
@@ -62,13 +62,14 @@ export default async (req) => {
     },
     ];
 
-    const minterAddress = '0x04e2516a2c207e84a1839755675dfd8ef6302f0a'; // Replace with the actual minter contract address
-    const mintReferral = '0x76963eE4C482fA4F9E125ea3C9Cc2Ea81fe8e8C6'; // Replace with the actual mint referral address
+    const minterAddress = '0x04e2516a2c207e84a1839755675dfd8ef6302f0a';
+    const mintReferral = '0x76963eE4C482fA4F9E125ea3C9Cc2Ea81fe8e8C6';
 
-    const tokenId = 1; // Replace with the actual token ID
-    const quantity = 1; // Replace with the desired quantity
-    const mintToAddress = frameMessage.connectedAddress; // Replace with the actual address
-    const comment = 'Your comment'; // Replace with the actual comment string
+    const tokenId = 2;
+    const quantity = 3; 
+    const mintToAddress = frameMessage.connectedAddress; 
+    const comment = 'Your comment'; 
+    
     let minterArguments;
     if (comment.length > 0) {
       minterArguments = encodeAbiParameters(
@@ -86,8 +87,6 @@ export default async (req) => {
           [mintToAddress as `0x${string}`]
       );
     }
-    
-    console.log(minterArguments);
 
     // Encode the transaction data for the incrementCount function
     const calldata = encodeFunctionData({
@@ -96,17 +95,15 @@ export default async (req) => {
       args: [minterAddress, tokenId, quantity, minterArguments, mintReferral]
     });
 
-    console.log(calldata);
-
     const txJson = JSON.stringify(
       {
-        chainId: 'eip155:8453', // base
+        chainId: 'eip155:7777777', // zora
         method: 'eth_sendTransaction',
         params: {
           abi: partialZora1155ABI, 
           to: CONTRACT_ADDRESS,
           data: calldata,
-          value: mintFee,
+          value: (mintFee * quantity).toString(),
         },
       }
     );

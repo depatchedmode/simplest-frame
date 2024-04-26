@@ -1,55 +1,62 @@
 import { FrameActionDataParsed } from 'frames.js';
-const html = String.raw;
 
 export default {
     name: 'transaction',
-    render: async () => {
+    render: async (frameData: FrameActionDataParsed) => {
+        console.log('render transaction')
+        const state = frameData.state ? JSON.parse(frameData.state) : {};
+        const mintQuantity = state.mintQuantity ? state.mintQuantity : 1;
         return {
-            imageMarkup: html`
-            <div style="
-                font-family: 'Redaction';
-                display: flex;
-                flex-direction: column;
-                width: 100vw;
-                height: 100vh;
-                color: white;
-                background: black;
-                align-items: center;
-                justify-content: center;
-                line-height: 1;
-                gap: 1rem;
-            ">
-                <div style="font-size: 5em;">
-                   Count Onchain
-                </div>
-                <div style="font-size: 2em;">
-                   Visit the contract to see the current count
-                </div>
-            </div>`,
+            imageURL: 'images/simplest-frame-v0-12-0-1155.gif',
             buttons: [
                 {
                     action: 'post',
                     label: '⬅ Back'
                 },
                 {
-                    action: 'tx',
-                    target: `${process.env.URL}/txdata`,
-                    label: '⬆ Higher'
+                    action: 'post',
+                    label: '⬇'
                 },
                 {
-                    action: 'link',
-                    target: 'https://basescan.org/address/0x8ca328f83387519eb8b18ea23fc01bbe92de2adc',
-                    label: 'View Contract'
-                }
-            ]
+                    action: 'tx',
+                    target: `${process.env.URL}/txdata`,
+                    label: `Mint ${mintQuantity}`
+                },
+                {
+                    action: 'post',
+                    label: '⬆'
+                },
+            ],
+            inputText: 'Add a mint comment...',
         } 
     },
-    handleInteraction: async (msg: FrameActionDataParsed) => {
-        switch (msg.buttonIndex) {
-            case 1:
-                return `poster`;
-            case 2:
-                return `transaction`;
+    handleInteraction: async (frameData: FrameActionDataParsed) => {
+        const state = frameData.state ? JSON.parse(frameData.state) : {};
+        const mintQuantity = state.mintQuantity ? parseInt(state.mintQuantity) : 1;
+        switch (frameData.buttonIndex) {
+            case 1: {
+                return {
+                    frame: 'poster'
+                };
+            }
+            case 2: {
+                return {
+                    frame: 'transaction',
+                    mintQuantity: Math.max(1,mintQuantity-1),
+                };
+            }
+            case 3: {
+                return {
+                    frame: 'transaction',
+                    mintQuantity
+                };
+            }
+            case 4: {
+                return {
+                    frame: 'transaction',
+                    mintQuantity: Math.min(256,mintQuantity+1),
+                };
+            }
         }
     },
 }
