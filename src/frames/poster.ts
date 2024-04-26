@@ -4,7 +4,7 @@ export default {
     name: 'poster',
     render: () => {
         return {
-            imageURL: 'images/poster-animated.gif',
+            image: 'images/poster-animated.gif',
             buttons: [
                 {
                     action: 'post',
@@ -26,14 +26,20 @@ export default {
             ]
         }
     },
-    handleInteraction: (msg: FrameActionDataParsed) => {
-        switch (msg.buttonIndex) {
-            case 1:
-                return `count`;
+    handleInteraction: (frameData: FrameActionDataParsed) => {
+        switch (frameData.buttonIndex) {
+            case 1: 
+                return {
+                    frame: 'count',
+                };
             case 2:
-                return `transaction`;
+                return {
+                    frame: 'transaction'
+                };
             case 3:
-                return `mint`;
+                return {
+                    frame: 'mint',
+                };
         }
     },
 };

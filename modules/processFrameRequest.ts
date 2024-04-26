@@ -4,73 +4,66 @@ import { html } from "satori-html";
 import fonts from "../src/fonts.js";
 import mainLayout from "../src/layouts/main.js";
 import frames from '../src/frames/index.js';
-import { Frame, FrameActionDataParsed, GetFrameHtmlOptions, getFrameHtml } from "frames.js";
+import { type Frame, type FrameActionDataParsed, type GetFrameHtmlOptions, getFrameHtml } from 'frames.js';
 import landingPage from '../src/landing-page.js';
 import { isFrameStolen } from './antitheft.js';
+
+const DEFAULT_FRAME = 'poster';
+const DEFAULT_STATE = {
+  frame: DEFAULT_FRAME,
+};
 
 /**
  * Determines the next frame to display based on the context and message of the current frame.
  * 
- * @param frameContext Contains context information about the current frame, such as the source frame.
- * @param frameMessage An object containing the parsed data for the frame action.
+ * @param prevFrameName The name of the frame 
+ * @param frameData An object containing the parsed data for the frame action.
  * @returns A promise that resolves to the response for displaying the next frame.
  */
-export default async (frameContext, frameMessage: FrameActionDataParsed) => {
-  let nextFrameName = 'poster';
-  const prevFrame = frames[frameContext.searchParams?.get('frame')];
+export default async (prevFrameName: string, frameData: FrameActionDataParsed) => {
+  const prevFrame = prevFrameName ? frames[prevFrameName] : null;
 
+  let nextState = DEFAULT_STATE;  
   if (prevFrame && typeof prevFrame.handleInteraction === 'function') {
-    nextFrameName = await prevFrame.handleInteraction(frameMessage, frameContext);
+    nextState = await prevFrame.handleInteraction(frameData);
   }
 
-  if (await isFrameStolen(frameMessage)) {
-    nextFrameName = 'stolen';
+  if (await isFrameStolen(frameData)) {
+    nextState.frame = 'stolen';
   }
 
-  const nextFrame = await frames[nextFrameName].render(frameMessage);
+  const nextFrame = frames[nextState.frame];
+  frameData.state = nextFrame.state = JSON.stringify({ ...nextFrame.state, ...nextState });
 
   // TODO: not yet handling redirects
   if (nextFrame) {
-    return await respondWithFrame(nextFrameName, nextFrame, frameMessage);
+    return await respondWithFrame(nextFrame, frameData);
   } else {
-    console.error(`Unknown frame requested: ${nextFrameName}`);
+    console.error(`Unknown frame requested: ${nextState.frame}`);
   }
 }
-
-// const respondWithRedirect = (redirectURL) => {
-//   const internalRedirectURL = new URL(`${process.env.URL}/redirect`) 
-//   internalRedirectURL.searchParams.set('redirectURL',redirectURL);
-//   return new Response('<div>redirect</div>', 
-//     {
-//       status: 302,
-//       headers: { 
-//         'Location': internalRedirectURL.toString(),
-//       },
-//     }
-//   );
-// }
 
 /**
  * Constructs and responds with the HTML for a given frame based on the simpleFrame object and a frame message.
  * 
- * @param simpleFrame The frame object containing minimal information needed to construct the full frame.
+ * @param renderedFrame The frame object containing minimal information needed to construct the full frame.
  * @param message An object containing the parsed data for the frame action.
  * @returns A promise that resolves to a Response object containing the HTML for the frame.
  */
 const respondWithFrame = async (
-  name,
-  simpleFrame, 
-  message: FrameActionDataParsed
+  nextFrame, 
+  frameData: FrameActionDataParsed
 ) => {
   const postVars = new URLSearchParams();
-  postVars.set('frame', name);
-  const host = process.env.URL;
+  postVars.set('currFrame', nextFrame.name);
+  const renderedFrame = await nextFrame.render(frameData);
   const frame: Frame = {
     version: 'vNext', 
-    image: await handleImageSource(simpleFrame, message),
-    buttons: simpleFrame.buttons, 
-    inputText: simpleFrame.inputText,
-    postUrl: `${host}/?${postVars.toString()}`
+    image: await handleImageSource(renderedFrame.image, frameData),
+    buttons: renderedFrame.buttons, 
+    inputText: renderedFrame.inputText,
+    postUrl: `${process.env.URL}/?${postVars.toString()}`,
+    state: nextFrame.state,
   };
 
   const index = await landingPage(frame);
@@ -94,15 +87,13 @@ const respondWithFrame = async (
   );
 };
 
-async function handleImageSource(frame, message):Promise<string> {
+async function handleImageSource(image, frameData):Promise<string> {
   const dataUriPattern = /^data:image\/[a-zA-Z]+;base64,/;
   const absoluteUrlPattern = /^https?:\/\//;
-  const host = process.env.URL;
+  const htmlPattern = /(<([^>]+)>)/gi;
 
-  const { imageURL, imageMarkup } = frame;
-
-  if (imageMarkup) {
-    const frameMarkupInLayout = mainLayout(imageMarkup, message)
+  if (htmlPattern.test(image)) {
+    const frameMarkupInLayout = mainLayout(image, frameData)
     const svg = await satori(
       html(frameMarkupInLayout), 
       {
@@ -117,20 +108,13 @@ async function handleImageSource(frame, message):Promise<string> {
     return `data:image/png;base64,${imageBuffer.toString('base64')}`;
   } 
 
-  // data URI
-  else if (dataUriPattern.test(imageURL)) {
-    return imageURL;
+  // data URI or external url
+  else if (dataUriPattern.test(image) || absoluteUrlPattern.test(image)) {
+    return image;
   }
-
-  // external image: need to proxy it
-  else if (absoluteUrlPattern.test(imageURL)) {
-    const ogImageResponse = await fetch(imageURL);
-    const dataURI = await ogImageResponse.text(); // Assuming og-image returns the data URI in the response body
-    return dataURI;
-  } 
 
   // local image
   else {
-    return `${host}/${imageURL}`;
+    return `${process.env.URL}/${image}`;
   }
 }

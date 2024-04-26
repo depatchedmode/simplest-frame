@@ -1,5 +1,16 @@
+import fs from 'fs/promises';
+import path from 'path';
 import { Font, FontStyle, FontWeight } from 'satori';
-import { loadFont } from '../modules/utils.js';
+
+const loadFont = async (fileName) => {
+    try {
+        const filePath = path.join(__dirname, '../public', 'fonts', fileName);
+        const fontData = await fs.readFile(filePath);
+        return fontData;
+    } catch (error) {
+        console.error('Error reading font file:', error);
+    }
+}
 
 const fonts: Font[] = [
     {

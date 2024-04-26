@@ -10,12 +10,9 @@ export default async (req) => {
             hubHttpUrl: process.env.FARCASTER_HUB
         }) : {} as FrameActionDataParsed;
 
-        const frameContext = {
-            searchParams: requestURL.searchParams,
-            requestURL: payload?.untrustedData.url,
-        }
+        const prevFrameName = requestURL.searchParams?.get('currFrame')
         
-        return await processFrameRequest(frameContext, frameMessage);
+        return await processFrameRequest(prevFrameName, frameMessage);
     } catch (error) {
         console.error(`Error processing request: ${error}`);
     }

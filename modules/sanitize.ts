@@ -5,7 +5,7 @@ export default (text) => {
     try {
         const window = new JSDOM('').window;
         const purify = DOMPurify(window);
-        return purify.sanitize(text);
+        return purify.sanitize(text).replace(/(<([^>]+)>)/gi, "");
     } catch {
         throw new Error(`That ain't no string mfr`)
     }

@@ -6,7 +6,7 @@ export default {
     name: 'mint',
     render: async () => {
         return {
-            imageURL: 'images/poster-animated.gif',
+            image: 'images/poster-animated.gif',
             buttons: [
                 {
                     action: 'post',
@@ -24,12 +24,16 @@ export default {
             ]
         } 
     },
-    handleInteraction: async (msg: FrameActionDataParsed) => {
-        switch (msg.buttonIndex) {
+    handleInteraction: async (frameData: FrameActionDataParsed) => {
+        switch (frameData.buttonIndex) {
             case 1:
-                return `poster`;
-            case 2:
-                return `mint`;
+                return {
+                    frame: 'poster'
+                };
+            case 2: 
+                return {
+                    frame: 'mint'
+                };
         }
     },
 }
