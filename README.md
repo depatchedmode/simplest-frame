@@ -26,7 +26,7 @@ This is the "simplest" version of a Frame that can do all of the things a Frame 
 ### Example
 
 ![simplest-frame](https://github.com/depatchedmode/simplest-frame/assets/84613835/1ca2f2e6-767d-497a-ab88-96e26a7cbef8)
-https://warpcast.com/depatchedmode/0xecad681e
+[https://warpcast.com/depatchedmode/0xecad681e](https://warpcast.com/depatchedmode/0x0dbb53c2)
 
 ### Getting started
 
